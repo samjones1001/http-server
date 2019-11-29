@@ -1,0 +1,9 @@
+language: java
+
+os: linux
+dist: trusty
+jdk: oraclejdk13
+
+after_success:
+  - ./gradlew jacocoTestReport
+  - bash <(curl -s https://codecov.io/bash)
