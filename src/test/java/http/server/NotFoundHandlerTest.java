@@ -2,17 +2,24 @@ package http.server;
 
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class NotFoundHandlerTest {
     @Test
-    void correctlySetsThePassedResponse() {
-        String expectedHeaders = "HTTP/1.1 404 Not Found\r\n\r\n";
-        Response response = new Response();
+    void correctlySetsThePassedResponse() throws IOException {
+        String expectedHeaders = "HTTP/1.1 404 Not Found\r\nConnection: Close\r\n\r\n";
+        OutputStream outputStream = new ByteArrayOutputStream();
+        Response response = new Response(outputStream);
         Handler notFoundHandler = new NotFoundHandler();
 
         notFoundHandler.handle(response);
 
-        assertEquals(expectedHeaders, response.send());
+        response.send();
+
+        assertEquals(expectedHeaders, outputStream.toString());
     }
 }

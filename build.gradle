@@ -14,7 +14,7 @@ dependencies {
 }
 
 application {
-    mainClassName = 'http.server.App'
+    mainClassName = 'http.server.HTTPServer'
 }
 
 test {
