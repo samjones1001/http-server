@@ -1,5 +1,6 @@
 package http.server;
 
+import http.server.handlers.NotFoundHandler;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;

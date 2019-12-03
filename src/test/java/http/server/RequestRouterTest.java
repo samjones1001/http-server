@@ -1,5 +1,7 @@
 package http.server;
 
+import http.server.handlers.HeadHandler;
+import http.server.handlers.NotFoundHandler;
 import http.server.mocks.MockSocket;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,7 +43,7 @@ public class RequestRouterTest {
         MockSocket mockSocket = new MockSocket(in, out);
         RequestRouter router = new RequestRouter(mockSocket, handlers);
 
-        router.run();
+        router.routeRequest();
 
         assertEquals(expectedResponseText, out.toString());
     }
@@ -55,8 +57,6 @@ public class RequestRouterTest {
         Request request = new Request(in);
         RequestRouter router = new RequestRouter(new Socket(), handlers);
 
-        request.parse();
-
         assertEquals(expectedHandler, router.retrieveHandler(request));
     }
 
@@ -68,8 +68,6 @@ public class RequestRouterTest {
         BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
         Request request = new Request(in);
         RequestRouter router = new RequestRouter(new Socket(), handlers);
-
-        request.parse();
 
         assertEquals(expectedHandler, router.retrieveHandler(request));
     }

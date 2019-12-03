@@ -2,15 +2,15 @@ package http.server;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.StringTokenizer;
 
 public class Request {
     private BufferedReader in;
     private String method;
     private String path;
 
-    public Request(BufferedReader in) throws IOException {
+    public Request(BufferedReader in) {
         this.in = in;
+        parse();
     }
 
     public String getMethod() {
@@ -21,14 +21,17 @@ public class Request {
         return this.path;
     }
 
-    public void parse() throws IOException  {
-        String requestLine = in.readLine();
-        StringTokenizer tokens = new StringTokenizer(requestLine);
-        String[] requestLineComponents = new String[3];
-
-        for (int tokenIndex = 0; tokenIndex < requestLineComponents.length; tokenIndex++) {
-            requestLineComponents[tokenIndex] = tokens.nextToken();
+    private void parse() {
+        try {
+            parseRequestLine();
+        } catch (IOException err) {
+            System.out.println(err.getMessage());
         }
+    }
+
+    private void parseRequestLine() throws IOException {
+        String requestLine = in.readLine();
+        String[] requestLineComponents = requestLine.split(" ", 3);
 
         this.method = requestLineComponents[0];
         this.path = requestLineComponents[1];

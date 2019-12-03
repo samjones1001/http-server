@@ -15,7 +15,6 @@ public class RequestTest {
         BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
 
         Request request = new Request(in);
-        request.parse();
 
         assertEquals("GET", request.getMethod());
         assertEquals("/some_page.html", request.getPath());

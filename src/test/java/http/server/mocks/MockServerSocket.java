@@ -1,27 +1,20 @@
 package http.server.mocks;
 
-import http.server.Server;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.ServerSocket;
 import java.nio.charset.Charset;
 
-public class MockServerSocket implements Server {
+public class MockServerSocket extends ServerSocket {
     private MockSocket mockSocket;
-    private int port;
 
     public MockServerSocket() throws IOException {
         this.mockSocket = new MockSocket(new ByteArrayInputStream("".getBytes(Charset.forName("UTF-8"))), new ByteArrayOutputStream());
     }
 
-    public MockServerSocket(MockSocket mockSocket) {
+    public MockServerSocket(MockSocket mockSocket) throws IOException {
         this.mockSocket = mockSocket;
-    }
-
-    @Override
-    public void start(int port) {
-        this.port = port;
     }
 
     @Override
@@ -29,6 +22,5 @@ public class MockServerSocket implements Server {
         MockSocket socket = this.mockSocket;
         this.mockSocket = null;
         return socket;
-//        return this.mockSocket;
     }
 }

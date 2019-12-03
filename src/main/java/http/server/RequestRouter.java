@@ -7,25 +7,25 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Map;
 
-public class RequestRouter implements Runnable {
-    private Map<String, Map<String, Handler>> handlers;
+public class RequestRouter {
     private Socket socket;
+    private Map<String, Map<String, Handler>> handlers;
     private BufferedReader in;
     private OutputStream out;
 
     public RequestRouter(Socket socket, Map<String, Map<String, Handler>> handlers) {
-        this.handlers = handlers;
         this.socket = socket;
+        this.handlers = handlers;
     }
 
-    public void run() {
+    public void routeRequest() {
         try {
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = socket.getOutputStream();
             Request request = new Request(in);
-            request.parse();
             Response response = new Response(out);
             Handler handler = retrieveHandler(request);
+
             handler.handle(response);
             response.send();
         } catch (IOException err) {
@@ -35,11 +35,8 @@ public class RequestRouter implements Runnable {
 
     public Handler retrieveHandler(Request request) {
         Map<String, Handler> methodHandlers = handlers.get(request.getMethod());
-        for (String path : methodHandlers.keySet()) {
-            if (path.equals(request.getPath())) {
-                return methodHandlers.get(path);
-            }
-        }
-        return handlers.get("ERR").get("/not_found");
+        return methodHandlers.containsKey(request.getPath()) ?
+                methodHandlers.get(request.getPath()) :
+                handlers.get("ERR").get("/not_found");
     }
 }

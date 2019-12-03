@@ -1,5 +1,6 @@
 package http.server;
 
+import http.server.handlers.HeadHandler;
 import http.server.mocks.MockServerSocket;
 import http.server.mocks.MockSocket;
 import org.junit.jupiter.api.Test;
@@ -8,11 +9,11 @@ import java.io.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class HTTPServerTest {
+public class ServerTest {
     @Test
     void addsANewHandlerToTheListOfHandlers() throws IOException {
         Handler handler = new HeadHandler();
-        HTTPServer server = new HTTPServer(5000, new MockServerSocket());
+        Server server = new Server(new MockServerSocket());
         server.addHandler("HEAD", "/some_path", handler);
 
         assertEquals(handler, server.getHandlers().get("HEAD").get("/some_path"));
@@ -21,7 +22,7 @@ public class HTTPServerTest {
     @Test
     void multiplePathsWithTheSameMethodAreNestedTogether() throws IOException {
         Handler handler = new HeadHandler();
-        HTTPServer server = new HTTPServer(5000, new MockServerSocket());
+        Server server = new Server(new MockServerSocket());
         server.addHandler("HEAD", "/some_path", handler);
         server.addHandler("HEAD", "/some_other_path", handler);
 
@@ -36,7 +37,7 @@ public class HTTPServerTest {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         MockSocket mockSocket = new MockSocket(in ,out);
         Handler handler = new HeadHandler();
-        HTTPServer server = new HTTPServer(5000, new MockServerSocket(mockSocket));
+        Server server = new Server(new MockServerSocket(mockSocket));
         server.addHandler("HEAD", "/some_path", handler);
 
         server.start();

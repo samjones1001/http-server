@@ -30,10 +30,22 @@ public class Response {
 
     public void send() throws IOException  {
         headers.put("Connection", "Close");
-        String response = "HTTP/1.1 " + statusCode + " " + statusMessage + "\r\n";
+        String response = buildHeaders(buildResponseLine());
+        out.write((response).getBytes());
+    }
+
+    private String buildResponseLine() {
+        return "HTTP/1.1 " + statusCode + " " + statusMessage + "\r\n";
+    }
+
+    private String buildHeaders(String response) {
         for (String headerName : headers.keySet()) {
-            response += (headerName + ": " + headers.get(headerName) + "\r\n");
+            response += buildHeaderLine(headerName);
         }
-        out.write((response + "\r\n").getBytes());
+        return response + "\r\n";
+    }
+
+    private String buildHeaderLine(String headerName) {
+        return headerName + ": " + headers.get(headerName) + "\r\n";
     }
 }
