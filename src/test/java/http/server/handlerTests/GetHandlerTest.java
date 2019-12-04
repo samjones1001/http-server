@@ -1,5 +1,7 @@
-package http.server;
+package http.server.handlerTests;
 
+import http.server.Handler;
+import http.server.Response;
 import http.server.handlers.GetHandler;
 import http.server.handlers.HeadHandler;
 import org.junit.jupiter.api.Test;

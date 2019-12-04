@@ -3,9 +3,7 @@ package http.server.handlers;
 import http.server.Handler;
 import http.server.Response;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Map;
+import java.util.*;
 
 public class MethodNotAllowedHandler implements Handler {
     private final Map<String, Handler> methodHandlers;
@@ -14,26 +12,27 @@ public class MethodNotAllowedHandler implements Handler {
         this.methodHandlers = methodHandlers;
     }
 
-    public void handle(Response response) {
+    public void setResponseValues(Response response) {
         response.setStatusCode(405, "Method Not Allowed");
         response.addHeader("Content-Type", "text/html");
-        response.addHeader("Allow", allowedMethods());
-        response.addBody("");
+        response.addHeader("Allow", allowedMethodsHeaderValue());
+        response.addBody("<p>Method not supported on this path</p>");
     }
 
-    private String allowedMethods() {
-        ArrayList<String> allowedMethods = new ArrayList<>() {{
+    private String allowedMethodsHeaderValue() {
+        Set<String> allowedMethods = new HashSet<>() {{
             add("HEAD");
             add("OPTIONS");
         }};
+        return String.join(", ", buildAllowedMethodsList(allowedMethods));
+    }
 
+    private ArrayList<String> buildAllowedMethodsList(Set<String> allowedMethods) {
         for (String method: methodHandlers.keySet()) {
-            if (!allowedMethods.contains(method)) {
-                allowedMethods.add(method);
-            }
+            allowedMethods.add(method);
         }
-
-        Collections.sort(allowedMethods);
-        return String.join(", ", allowedMethods);
+        ArrayList<String> allowedMethodsList = new ArrayList<>(allowedMethods);
+        Collections.sort(allowedMethodsList);
+        return allowedMethodsList;
     }
 }

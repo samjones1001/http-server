@@ -1,5 +1,7 @@
-package http.server;
+package http.server.handlerTests;
 
+import http.server.Handler;
+import http.server.Response;
 import http.server.handlers.HeadHandler;
 import http.server.handlers.MethodNotAllowedHandler;
 import org.junit.jupiter.api.Test;
@@ -14,8 +16,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class MethodNotAllowedHandlerTest {
     @Test
     void correctlySetsThePassedResponseAssigningHeadAndOptionsToAllowHeaderByDefault() throws IOException {
-        String expectedHeaders = "HTTP/1.1 405 Method Not Allowed\r\nConnection: Close\r\nContent-Length: 0\r\n" +
-                "Content-Type: text/html\r\nAllow: HEAD, OPTIONS\r\n\r\n";
+        String expectedHeaders = "HTTP/1.1 405 Method Not Allowed\r\nConnection: Close\r\nContent-Length: 40\r\n" +
+                "Content-Type: text/html\r\nAllow: HEAD, OPTIONS\r\n\r\n<p>Method not supported on this path</p>";
         HashMap<String, Handler> methodHandlers = new HashMap<>(){{
             put("HEAD", new HeadHandler());
         }};
@@ -24,7 +26,6 @@ public class MethodNotAllowedHandlerTest {
         Handler notAllowedHandler = new MethodNotAllowedHandler(methodHandlers);
 
         notAllowedHandler.handle(response);
-
         response.send();
 
         assertEquals(expectedHeaders, outputStream.toString());
@@ -32,10 +33,9 @@ public class MethodNotAllowedHandlerTest {
 
     @Test
     void correctlySetsAnAlphabetisedAllowHeaderWhereOtherMethodsAllowed() throws IOException {
-        String expectedHeaders = "HTTP/1.1 405 Method Not Allowed\r\nConnection: Close\r\nContent-Length: 0\r\n" +
-                "Content-Type: text/html\r\nAllow: GET, HEAD, OPTIONS\r\n\r\n";
+        String expectedHeaders = "HTTP/1.1 405 Method Not Allowed\r\nConnection: Close\r\nContent-Length: 40\r\n" +
+                "Content-Type: text/html\r\nAllow: GET, HEAD, OPTIONS\r\n\r\n<p>Method not supported on this path</p>";
         HashMap<String, Handler> methodHandlers = new HashMap<>() {{
-            put("HEAD", new HeadHandler());
             put("GET", new HeadHandler());
         }};
         OutputStream outputStream = new ByteArrayOutputStream();

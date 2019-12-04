@@ -19,13 +19,13 @@ public class ServerTest {
     }
 
     @Test
-    void multiplePathsWithTheSameMethodAreNestedTogether() throws IOException {
+    void multipleMethodsOnTheSamePathAreNestedTogether() throws IOException {
         Handler handler = new HeadHandler();
         Server server = new Server(new MockServerSocket());
         server.addHandler("/some_path", "/GET", handler);
         server.addHandler("/some_path", "/POST", handler);
-
-        assertEquals(2, server.getHandlers().get("/some_path").size());
+        int numberOfMethodsAddedPlusDefaultMethods = 3;
+        assertEquals(numberOfMethodsAddedPlusDefaultMethods, server.getHandlers().get("/some_path").size());
     }
 
     @Test

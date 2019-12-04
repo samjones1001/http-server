@@ -1,6 +1,8 @@
-package http.server;
+package http.server.handlerTests;
 
-import http.server.handlers.NotFoundHandler;
+import http.server.Handler;
+import http.server.Response;
+import http.server.handlers.HeadHandler;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -9,16 +11,15 @@ import java.io.OutputStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class NotFoundHandlerTest {
+public class HeadHandlerTest {
     @Test
     void correctlySetsThePassedResponse() throws IOException {
-        String expectedHeaders = "HTTP/1.1 404 Not Found\r\nConnection: Close\r\nContent-Length: 0\r\n\r\n";
+        String expectedHeaders = "HTTP/1.1 200 OK\r\nConnection: Close\r\nContent-Type: text/html\r\n\r\n";
         OutputStream outputStream = new ByteArrayOutputStream();
         Response response = new Response(outputStream);
-        Handler notFoundHandler = new NotFoundHandler();
+        Handler headHandler = new HeadHandler();
 
-        notFoundHandler.handle(response);
-
+        headHandler.handle(response);
         response.send();
 
         assertEquals(expectedHeaders, outputStream.toString());
