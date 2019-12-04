@@ -25,7 +25,6 @@ public class RequestRouter {
             Request request = new Request(in);
             Response response = new Response(out);
             Handler handler = retrieveHandler(request);
-
             handler.handle(response);
             response.send();
         } catch (IOException err) {
@@ -34,9 +33,14 @@ public class RequestRouter {
     }
 
     public Handler retrieveHandler(Request request) {
-        Map<String, Handler> methodHandlers = handlers.get(request.getMethod());
-        return methodHandlers.containsKey(request.getPath()) ?
-                methodHandlers.get(request.getPath()) :
-                handlers.get("ERR").get("/not_found");
+        Map<String, Handler> pathHandlers = handlers.get(request.getPath());
+
+        if (pathHandlers != null) {
+            return pathHandlers.containsKey(request.getMethod()) ?
+                    pathHandlers.get(request.getMethod()) :
+                    handlers.get("err").get("err");
+        } else {
+            return handlers.get("err").get("err");
+        }
     }
 }

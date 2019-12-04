@@ -26,9 +26,9 @@ public class Server {
         return handlers;
     }
 
-    public void addHandler(String method, String path, Handler handler) {
-        Map<String, Handler> methodHandlers = handlers.computeIfAbsent(method, key -> new HashMap<>());
-        methodHandlers.put(path, handler);
+    public void addHandler(String path, String method, Handler handler) {
+        Map<String, Handler> pathHandlers = handlers.computeIfAbsent(path, key -> new HashMap<>());
+        pathHandlers.put(method, handler);
     }
 
     public void start() throws IOException {
@@ -46,10 +46,10 @@ public class Server {
     public static void main(String[] args) {
         try {
             Server server = new Server(5000);
-            server.addHandler("HEAD", "/simple_get", new HeadHandler());
-            server.addHandler("ERR", "/not_found", new NotFoundHandler());
-            server.addHandler("HEAD", "/get_with_body", new HeadHandler());
-            server.addHandler("GET", "/simple_get", new GetHandler());
+            server.addHandler("/simple_get", "/GET", new GetHandler());
+            server.addHandler("/simple_get", "HEAD", new HeadHandler());
+            server.addHandler("/get_With_body", "HEAD", new HeadHandler());
+            server.addHandler("err", "err", new NotFoundHandler());
             server.start();
         } catch (IOException err) {
             System.out.println(err.getMessage());

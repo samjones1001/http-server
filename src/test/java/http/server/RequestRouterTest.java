@@ -20,23 +20,22 @@ public class RequestRouterTest {
     @BeforeEach
     void setupHandlers() {
         Map<String, Map<String, Handler>> handlers = new HashMap<>();
-        Map<String, Handler> headHandlers = new HashMap<>();
+        Map<String, Handler> pathHandlers = new HashMap<>();
         Handler headHandler = new HeadHandler();
         Map<String, Handler> errHandlers = new HashMap<>();
         Handler notFoundHandler = new NotFoundHandler();
 
-        headHandlers.put("/some_page", headHandler);
-        errHandlers.put("/not_found", notFoundHandler);
+        pathHandlers.put("HEAD", headHandler);
+        errHandlers.put("err", notFoundHandler);
 
-        handlers.put("HEAD", headHandlers);
-        handlers.put("ERR", errHandlers);
-
+        handlers.put("/some_path", pathHandlers);
+        handlers.put("err", errHandlers);
         this.handlers = handlers;
     }
 
     @Test
     void processesARequestAndSendsAResponseToTheClient() throws IOException {
-        String requestText = "HEAD /some_page HTTP/1.1";
+        String requestText = "HEAD /some_path HTTP/1.1";
         String expectedResponseText = "HTTP/1.1 200 OK\r\nConnection: Close\r\nContent-Type: text/html\r\n\r\n";
         ByteArrayInputStream in = new ByteArrayInputStream(requestText.getBytes());
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -50,8 +49,8 @@ public class RequestRouterTest {
 
     @Test
     void retrievesTheHandlerForThePassedRequest() throws IOException {
-        Handler expectedHandler = handlers.get("HEAD").get("/some_page");
-        String requestText = "HEAD /some_page HTTP/1.1";
+        Handler expectedHandler = handlers.get("/some_path").get("HEAD");
+        String requestText = "HEAD /some_path HTTP/1.1";
         InputStream inputStream = new ByteArrayInputStream(requestText.getBytes(Charset.forName("UTF-8")));
         BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
         Request request = new Request(in);
@@ -62,7 +61,7 @@ public class RequestRouterTest {
 
     @Test
     void returnsANotFoundHandlerIfNoMatchingHandlerFound() throws IOException {
-        Handler expectedHandler = handlers.get("ERR").get("/not_found");
+        Handler expectedHandler = handlers.get("err").get("err");
         String requestText = "HEAD /non_existant_page HTTP/1.1";
         InputStream inputStream = new ByteArrayInputStream(requestText.getBytes(Charset.forName("UTF-8")));
         BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
