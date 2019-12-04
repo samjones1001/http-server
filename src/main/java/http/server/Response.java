@@ -10,6 +10,7 @@ public class Response {
     private int statusCode;
     private String statusMessage;
     private Map<String, String> headers = new HashMap<>();
+    private String body;
 
     public Response(OutputStream out) {
        this.out = out;
@@ -18,6 +19,8 @@ public class Response {
     public Map<String, String> getHeaders() {
         return headers;
     }
+
+    public String getBody() { return this.body; }
 
     public void setStatusCode(int code, String message) {
         this.statusCode = code;
@@ -28,9 +31,17 @@ public class Response {
         this.headers.put(name, value);
     }
 
+    public void addBody(String body) {
+        addHeader("Content-Length", Integer.toString(body.length()));
+        this.body = body;
+    }
+
     public void send() throws IOException  {
         headers.put("Connection", "Close");
         String response = buildHeaders(buildResponseLine());
+        if (body != null) {
+            response += body;
+        }
         out.write((response).getBytes());
     }
 

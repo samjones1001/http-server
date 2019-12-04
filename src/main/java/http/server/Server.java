@@ -1,5 +1,6 @@
 package http.server;
 
+import http.server.handlers.GetHandler;
 import http.server.handlers.HeadHandler;
 import http.server.handlers.NotFoundHandler;
 
@@ -48,6 +49,7 @@ public class Server {
             server.addHandler("HEAD", "/simple_get", new HeadHandler());
             server.addHandler("ERR", "/not_found", new NotFoundHandler());
             server.addHandler("HEAD", "/get_with_body", new HeadHandler());
+            server.addHandler("GET", "/simple_get", new GetHandler());
             server.start();
         } catch (IOException err) {
             System.out.println(err.getMessage());
