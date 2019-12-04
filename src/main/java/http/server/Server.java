@@ -46,10 +46,9 @@ public class Server {
     public static void main(String[] args) {
         try {
             Server server = new Server(5000);
-            server.addHandler("/simple_get", "/GET", new GetHandler());
+            server.addHandler("/simple_get", "GET", new GetHandler());
             server.addHandler("/simple_get", "HEAD", new HeadHandler());
-            server.addHandler("/get_With_body", "HEAD", new HeadHandler());
-            server.addHandler("err", "err", new NotFoundHandler());
+            server.addHandler("/get_with_body", "HEAD", new HeadHandler());
             server.start();
         } catch (IOException err) {
             System.out.println(err.getMessage());

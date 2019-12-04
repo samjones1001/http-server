@@ -1,5 +1,8 @@
 package http.server;
 
+import http.server.handlers.MethodNotAllowedHandler;
+import http.server.handlers.NotFoundHandler;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -38,9 +41,9 @@ public class RequestRouter {
         if (pathHandlers != null) {
             return pathHandlers.containsKey(request.getMethod()) ?
                     pathHandlers.get(request.getMethod()) :
-                    handlers.get("err").get("err");
+                    new MethodNotAllowedHandler(pathHandlers);
         } else {
-            return handlers.get("err").get("err");
+            return new NotFoundHandler();
         }
     }
 }

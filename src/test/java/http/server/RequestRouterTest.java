@@ -1,6 +1,7 @@
 package http.server;
 
 import http.server.handlers.HeadHandler;
+import http.server.handlers.MethodNotAllowedHandler;
 import http.server.handlers.NotFoundHandler;
 import http.server.mocks.MockSocket;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class RequestRouterTest {
     private Map<String, Map<String, Handler>> handlers;
@@ -61,13 +63,23 @@ public class RequestRouterTest {
 
     @Test
     void returnsANotFoundHandlerIfNoMatchingHandlerFound() throws IOException {
-        Handler expectedHandler = handlers.get("err").get("err");
         String requestText = "HEAD /non_existant_page HTTP/1.1";
         InputStream inputStream = new ByteArrayInputStream(requestText.getBytes(Charset.forName("UTF-8")));
         BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
         Request request = new Request(in);
         RequestRouter router = new RequestRouter(new Socket(), handlers);
 
-        assertEquals(expectedHandler, router.retrieveHandler(request));
+        assertTrue(router.retrieveHandler(request) instanceof NotFoundHandler);
+    }
+
+    @Test
+    void returnsAMethodNotAllowedHandlerIfPathExistsButDoesNotRespondToMethod() {
+        String requestText = "POST /some_path HTTP/1.1";
+        InputStream inputStream = new ByteArrayInputStream(requestText.getBytes(Charset.forName("UTF-8")));
+        BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
+        Request request = new Request(in);
+        RequestRouter router = new RequestRouter(new Socket(), handlers);
+
+        assertTrue(router.retrieveHandler(request) instanceof MethodNotAllowedHandler);
     }
 }
