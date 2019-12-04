@@ -25,7 +25,7 @@ public class MethodNotAllowedHandlerTest {
         Response response = new Response(outputStream);
         Handler notAllowedHandler = new MethodNotAllowedHandler(methodHandlers);
 
-        notAllowedHandler.handle(response);
+        notAllowedHandler.setResponseValues(response);
         response.send();
 
         assertEquals(expectedHeaders, outputStream.toString());
@@ -42,7 +42,7 @@ public class MethodNotAllowedHandlerTest {
         Response response = new Response(outputStream);
         Handler notAllowedHandler = new MethodNotAllowedHandler(methodHandlers);
 
-        notAllowedHandler.handle(response);
+        notAllowedHandler.setResponseValues(response);
 
         response.send();
 

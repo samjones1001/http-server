@@ -20,7 +20,7 @@ public class NotFoundHandlerTest {
         Response response = new Response(outputStream);
         Handler notFoundHandler = new NotFoundHandler();
 
-        notFoundHandler.handle(response);
+        notFoundHandler.setResponseValues(response);
         response.send();
 
         assertEquals(expectedHeaders, outputStream.toString());

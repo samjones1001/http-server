@@ -19,7 +19,7 @@ public class HeadHandlerTest {
         Response response = new Response(outputStream);
         Handler headHandler = new HeadHandler();
 
-        headHandler.handle(response);
+        headHandler.setResponseValues(response);
         response.send();
 
         assertEquals(expectedHeaders, outputStream.toString());

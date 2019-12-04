@@ -38,12 +38,20 @@ public class RequestRouter {
     public Handler retrieveHandler(Request request) {
         Map<String, Handler> pathHandlers = handlers.get(request.getPath());
 
-        if (pathHandlers != null) {
-            return pathHandlers.containsKey(request.getMethod()) ?
+        if (pathExists(pathHandlers)) {
+            return methodExistsForPath(pathHandlers, request.getMethod()) ?
                     pathHandlers.get(request.getMethod()) :
                     new MethodNotAllowedHandler(pathHandlers);
         } else {
             return new NotFoundHandler();
         }
+    }
+
+    private boolean pathExists(Map<String, Handler> pathHandlers) {
+        return pathHandlers != null;
+    }
+
+    private boolean methodExistsForPath(Map<String, Handler> pathHandlers, String method) {
+        return pathHandlers.containsKey(method);
     }
 }

@@ -21,7 +21,7 @@ public class GetHandlerTest {
         Response response = new Response(outputStream);
         Handler getHandler = new GetHandler();
 
-        getHandler.handle(response);
+        getHandler.setResponseValues(response);
         response.send();
 
         assertEquals(expectedHeaders, outputStream.toString());
@@ -33,7 +33,7 @@ public class GetHandlerTest {
         Response response = new Response(outputStream);
         Handler getHandler = new GetHandler();
 
-        getHandler.handle(response);
+        getHandler.setResponseValues(response);
 
         assertNotNull(response.getBody());
     }
