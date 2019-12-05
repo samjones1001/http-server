@@ -14,19 +14,18 @@ public class ServerTest {
     void addsANewHandlerToTheListOfHandlers() throws IOException {
         Handler handler = new HeadHandler();
         Server server = new Server(new MockServerSocket());
-        server.addHandler("HEAD", "/some_path", handler);
-
-        assertEquals(handler, server.getHandlers().get("HEAD").get("/some_path"));
+        server.addHandler("/some_path", "HEAD", handler);
+        assertEquals(handler, server.getHandlers().get("/some_path").get("HEAD"));
     }
 
     @Test
-    void multiplePathsWithTheSameMethodAreNestedTogether() throws IOException {
+    void multipleMethodsOnTheSamePathAreNestedTogether() throws IOException {
         Handler handler = new HeadHandler();
         Server server = new Server(new MockServerSocket());
-        server.addHandler("HEAD", "/some_path", handler);
-        server.addHandler("HEAD", "/some_other_path", handler);
-
-        assertEquals(2, server.getHandlers().get("HEAD").size());
+        server.addHandler("/some_path", "/GET", handler);
+        server.addHandler("/some_path", "/POST", handler);
+        int numberOfMethodsAddedPlusDefaultMethods = 3;
+        assertEquals(numberOfMethodsAddedPlusDefaultMethods, server.getHandlers().get("/some_path").size());
     }
 
     @Test
@@ -38,7 +37,7 @@ public class ServerTest {
         MockSocket mockSocket = new MockSocket(in ,out);
         Handler handler = new HeadHandler();
         Server server = new Server(new MockServerSocket(mockSocket));
-        server.addHandler("HEAD", "/some_path", handler);
+        server.addHandler("/some_path", "HEAD", handler);
 
         server.start();
         assertEquals(expectedResponse, out.toString());

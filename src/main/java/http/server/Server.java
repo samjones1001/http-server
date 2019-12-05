@@ -1,7 +1,7 @@
 package http.server;
 
+import http.server.handlers.GetHandler;
 import http.server.handlers.HeadHandler;
-import http.server.handlers.NotFoundHandler;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -25,9 +25,10 @@ public class Server {
         return handlers;
     }
 
-    public void addHandler(String method, String path, Handler handler) {
-        Map<String, Handler> methodHandlers = handlers.computeIfAbsent(method, key -> new HashMap<>());
-        methodHandlers.put(path, handler);
+    public void addHandler(String path, String method, Handler handler) {
+        Map<String, Handler> pathHandlers = handlers.computeIfAbsent(path, key -> new HashMap<>());
+        pathHandlers.put(method, handler);
+        addDefaultHandlers(pathHandlers);
     }
 
     public void start() throws IOException {
@@ -42,12 +43,17 @@ public class Server {
         router.routeRequest();
     }
 
+    private void addDefaultHandlers(Map<String, Handler> pathHandlers) {
+        if (!pathHandlers.containsKey("HEAD")) {
+            pathHandlers.put("HEAD", new HeadHandler());
+        }
+    }
+
     public static void main(String[] args) {
         try {
             Server server = new Server(5000);
-            server.addHandler("HEAD", "/simple_get", new HeadHandler());
-            server.addHandler("ERR", "/not_found", new NotFoundHandler());
-            server.addHandler("HEAD", "/get_with_body", new HeadHandler());
+            server.addHandler("/simple_get", "GET", new GetHandler());
+            server.addHandler("/get_with_body", "HEAD", new HeadHandler());
             server.start();
         } catch (IOException err) {
             System.out.println(err.getMessage());

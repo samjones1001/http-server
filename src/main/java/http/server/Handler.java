@@ -1,5 +1,6 @@
 package http.server;
 
 public interface Handler {
-    public void handle(Response response);
+    void setResponseValues(Response response);
 }
+

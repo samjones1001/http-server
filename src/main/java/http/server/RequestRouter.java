@@ -1,5 +1,8 @@
 package http.server;
 
+import http.server.handlers.MethodNotAllowedHandler;
+import http.server.handlers.NotFoundHandler;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -25,8 +28,7 @@ public class RequestRouter {
             Request request = new Request(in);
             Response response = new Response(out);
             Handler handler = retrieveHandler(request);
-
-            handler.handle(response);
+            handler.setResponseValues(response);
             response.send();
         } catch (IOException err) {
             System.out.println(err.getMessage());
@@ -34,9 +36,22 @@ public class RequestRouter {
     }
 
     public Handler retrieveHandler(Request request) {
-        Map<String, Handler> methodHandlers = handlers.get(request.getMethod());
-        return methodHandlers.containsKey(request.getPath()) ?
-                methodHandlers.get(request.getPath()) :
-                handlers.get("ERR").get("/not_found");
+        Map<String, Handler> pathHandlers = handlers.get(request.getPath());
+
+        if (pathExists(pathHandlers)) {
+            return methodExistsForPath(pathHandlers, request.getMethod()) ?
+                    pathHandlers.get(request.getMethod()) :
+                    new MethodNotAllowedHandler(pathHandlers);
+        } else {
+            return new NotFoundHandler();
+        }
+    }
+
+    private boolean pathExists(Map<String, Handler> pathHandlers) {
+        return pathHandlers != null;
+    }
+
+    private boolean methodExistsForPath(Map<String, Handler> pathHandlers, String method) {
+        return pathHandlers.containsKey(method);
     }
 }

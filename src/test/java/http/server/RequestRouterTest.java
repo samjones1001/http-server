@@ -1,6 +1,7 @@
 package http.server;
 
 import http.server.handlers.HeadHandler;
+import http.server.handlers.MethodNotAllowedHandler;
 import http.server.handlers.NotFoundHandler;
 import http.server.mocks.MockSocket;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class RequestRouterTest {
     private Map<String, Map<String, Handler>> handlers;
@@ -20,23 +22,22 @@ public class RequestRouterTest {
     @BeforeEach
     void setupHandlers() {
         Map<String, Map<String, Handler>> handlers = new HashMap<>();
-        Map<String, Handler> headHandlers = new HashMap<>();
+        Map<String, Handler> pathHandlers = new HashMap<>();
         Handler headHandler = new HeadHandler();
         Map<String, Handler> errHandlers = new HashMap<>();
         Handler notFoundHandler = new NotFoundHandler();
 
-        headHandlers.put("/some_page", headHandler);
-        errHandlers.put("/not_found", notFoundHandler);
+        pathHandlers.put("HEAD", headHandler);
+        errHandlers.put("err", notFoundHandler);
 
-        handlers.put("HEAD", headHandlers);
-        handlers.put("ERR", errHandlers);
-
+        handlers.put("/some_path", pathHandlers);
+        handlers.put("err", errHandlers);
         this.handlers = handlers;
     }
 
     @Test
     void processesARequestAndSendsAResponseToTheClient() throws IOException {
-        String requestText = "HEAD /some_page HTTP/1.1";
+        String requestText = "HEAD /some_path HTTP/1.1";
         String expectedResponseText = "HTTP/1.1 200 OK\r\nConnection: Close\r\nContent-Type: text/html\r\n\r\n";
         ByteArrayInputStream in = new ByteArrayInputStream(requestText.getBytes());
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -50,8 +51,8 @@ public class RequestRouterTest {
 
     @Test
     void retrievesTheHandlerForThePassedRequest() throws IOException {
-        Handler expectedHandler = handlers.get("HEAD").get("/some_page");
-        String requestText = "HEAD /some_page HTTP/1.1";
+        Handler expectedHandler = handlers.get("/some_path").get("HEAD");
+        String requestText = "HEAD /some_path HTTP/1.1";
         InputStream inputStream = new ByteArrayInputStream(requestText.getBytes(Charset.forName("UTF-8")));
         BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
         Request request = new Request(in);
@@ -62,13 +63,23 @@ public class RequestRouterTest {
 
     @Test
     void returnsANotFoundHandlerIfNoMatchingHandlerFound() throws IOException {
-        Handler expectedHandler = handlers.get("ERR").get("/not_found");
         String requestText = "HEAD /non_existant_page HTTP/1.1";
         InputStream inputStream = new ByteArrayInputStream(requestText.getBytes(Charset.forName("UTF-8")));
         BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
         Request request = new Request(in);
         RequestRouter router = new RequestRouter(new Socket(), handlers);
 
-        assertEquals(expectedHandler, router.retrieveHandler(request));
+        assertTrue(router.retrieveHandler(request) instanceof NotFoundHandler);
+    }
+
+    @Test
+    void returnsAMethodNotAllowedHandlerIfPathExistsButDoesNotRespondToMethod() {
+        String requestText = "POST /some_path HTTP/1.1";
+        InputStream inputStream = new ByteArrayInputStream(requestText.getBytes(Charset.forName("UTF-8")));
+        BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
+        Request request = new Request(in);
+        RequestRouter router = new RequestRouter(new Socket(), handlers);
+
+        assertTrue(router.retrieveHandler(request) instanceof MethodNotAllowedHandler);
     }
 }
