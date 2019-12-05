@@ -2,6 +2,7 @@ package http.server;
 
 import http.server.handlers.GetHandler;
 import http.server.handlers.HeadHandler;
+import http.server.handlers.OptionsHandler;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -43,9 +44,12 @@ public class Server {
         router.routeRequest();
     }
 
-    private void addDefaultHandlers(Map<String, Handler> pathHandlers) {
-        if (!pathHandlers.containsKey("HEAD")) {
-            pathHandlers.put("HEAD", new HeadHandler());
+    private void addDefaultHandlers(Map<String, Handler> methodHandlers) {
+        if (!methodHandlers.containsKey("HEAD")) {
+            methodHandlers.put("HEAD", new HeadHandler());
+        }
+        if (!methodHandlers.containsKey("OPTIONS")) {
+            methodHandlers.put("OPTIONS", new OptionsHandler(methodHandlers));
         }
     }
 
@@ -53,6 +57,7 @@ public class Server {
         try {
             Server server = new Server(5000);
             server.addHandler("/simple_get", "GET", new GetHandler());
+            server.addHandler("/method_options", "GET", new GetHandler());
             server.addHandler("/get_with_body", "HEAD", new HeadHandler());
             server.start();
         } catch (IOException err) {

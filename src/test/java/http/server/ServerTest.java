@@ -1,5 +1,6 @@
 package http.server;
 
+import http.server.handlers.GetHandler;
 import http.server.handlers.HeadHandler;
 import http.server.mocks.MockServerSocket;
 import http.server.mocks.MockSocket;
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.io.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ServerTest {
     @Test
@@ -16,6 +18,16 @@ public class ServerTest {
         Server server = new Server(new MockServerSocket());
         server.addHandler("/some_path", "HEAD", handler);
         assertEquals(handler, server.getHandlers().get("/some_path").get("HEAD"));
+    }
+
+    @Test
+    void addingANewPathToTheListOfHandlersAlsoAddsDefaultMethods() throws IOException {
+        Handler handler = new GetHandler();
+        Server server = new Server(new MockServerSocket());
+        server.addHandler("/some_path", "GET", handler);
+
+        assertTrue(server.getHandlers().get("/some_path").containsKey("HEAD"));
+        assertTrue(server.getHandlers().get("/some_path").containsKey("OPTIONS"));
     }
 
     @Test

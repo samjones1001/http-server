@@ -5,15 +5,15 @@ import http.server.Response;
 
 import java.util.*;
 
-public class MethodNotAllowedHandler implements Handler {
+public class OptionsHandler implements Handler {
     private final Map<String, Handler> methodHandlers;
 
-    public MethodNotAllowedHandler(Map<String, Handler> methodHandlers) {
+    public OptionsHandler(Map<String, Handler> methodHandlers) {
         this.methodHandlers = methodHandlers;
     }
 
     public void setResponseValues(Response response) {
-        response.setStatusCode(405, "Method Not Allowed");
+        response.setStatusCode(200, "No Content");
         response.addHeader("Content-Type", "text/html");
         response.addHeader("Allow", allowedMethodsHeaderValue());
         response.addBody("");
