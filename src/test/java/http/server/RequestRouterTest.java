@@ -42,28 +42,17 @@ public class RequestRouterTest {
         Handler handler = new HeadHandler();
         RequestRouter router = new RequestRouter();
         router.addRoute("/some_path", "HEAD", handler);
-        assertEquals(handler, router.getRoutes().get("/some_path").get("HEAD"));
+        assertEquals(1, router.getRoutes().size());
     }
 
     @Test
-    void addingANewPathToTheListOfHandlersAlsoAddsDefaultMethods() throws IOException {
-        Handler handler = new GetHandler();
-        RequestRouter router = new RequestRouter();
-        router.addRoute("/some_path", "GET", handler);
-
-        assertTrue(router.getRoutes().get("/some_path").containsKey("HEAD"));
-        assertTrue(router.getRoutes().get("/some_path").containsKey("OPTIONS"));
-    }
-
-    @Test
-    void multipleMethodsOnTheSamePathAreNestedTogether() throws IOException {
+    void multipleMethodsOnTheSameRouteAreNestedTogetherAndDoNotCreateDuplicateEntries() throws IOException {
         Handler handler = new HeadHandler();
         RequestRouter router = new RequestRouter();
 
         router.addRoute("/some_path", "/GET", handler);
         router.addRoute("/some_path", "/POST", handler);
-        int numberOfMethodsAddedPlusDefaultMethods = 4;
-        assertEquals(numberOfMethodsAddedPlusDefaultMethods, router.getRoutes().get("/some_path").size());
+        assertEquals(1, router.getRoutes().size());
     }
 
     @Test
@@ -75,6 +64,7 @@ public class RequestRouterTest {
         MockSocket mockSocket = new MockSocket(in, out);
         RequestRouter router = new RequestRouter();
         router.addRoute("/some_path", "HEAD", new HeadHandler());
+        System.out.println(router.getRoutes().get("/some_path").getMethodHandlers());
 
         router.routeRequest(mockSocket);
 

@@ -1,6 +1,7 @@
 import http.server.Handler;
 import http.server.Route;
 import http.server.handlers.GetHandler;
+import http.server.handlers.MethodNotAllowedHandler;
 import http.server.handlers.NotFoundHandler;
 import org.junit.jupiter.api.Test;
 
@@ -35,10 +36,10 @@ public class RouteTest {
     }
 
     @Test
-    void returnsAMethodNotFoundHandlerIfPassedUnavailableMethod() {
+    void returnsAMethodNotAllowedHandlerIfPassedUnavailableMethod() {
         Route route = new Route();
         Handler notFoundHandler = route.getMethodHandler("POST");
 
-        assertTrue(notFoundHandler instanceof NotFoundHandler);
+        assertTrue(notFoundHandler instanceof MethodNotAllowedHandler);
     }
 }

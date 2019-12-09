@@ -1,9 +1,6 @@
 package http.server;
 
-import http.server.handlers.HeadHandler;
-import http.server.handlers.MethodNotAllowedHandler;
 import http.server.handlers.NotFoundHandler;
-import http.server.handlers.OptionsHandler;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,18 +11,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RequestRouter {
-    private Map<String, Map<String, Handler>> routes = new HashMap<>();
+    private Map<String, Route> routes = new HashMap<>();
     private BufferedReader in;
     private OutputStream out;
 
-    public Map<String, Map<String, Handler>> getRoutes() {
+    public Map<String, Route> getRoutes() {
         return routes;
     }
 
     public void addRoute(String path, String method, Handler handler) {
-        Map<String, Handler> pathHandlers = routes.computeIfAbsent(path, key -> new HashMap<>());
-        pathHandlers.put(method, handler);
-        addDefaultHandlers(pathHandlers);
+        Route route = new Route();
+        routes.putIfAbsent(path, route);
+        route.addMethodHandler(method, handler);
     }
 
     public void routeRequest(Socket client) {
@@ -43,31 +40,14 @@ public class RequestRouter {
     }
 
     public Handler retrieveHandler(Request request) {
-        Map<String, Handler> pathHandlers = routes.get(request.getPath());
-
-        if (pathExists(pathHandlers)) {
-            return methodExistsForPath(pathHandlers, request.getMethod()) ?
-                    pathHandlers.get(request.getMethod()) :
-                    new MethodNotAllowedHandler(pathHandlers);
-        } else {
-            return new NotFoundHandler();
+        Route route = routes.get(request.getPath());
+        if (routeExists(route)) {
+            return route.getMethodHandler(request.getMethod());
         }
+        return new NotFoundHandler();
     }
 
-    private void addDefaultHandlers(Map<String, Handler> methodHandlers) {
-        if (!methodHandlers.containsKey("HEAD")) {
-            methodHandlers.put("HEAD", new HeadHandler());
-        }
-        if (!methodHandlers.containsKey("OPTIONS")) {
-            methodHandlers.put("OPTIONS", new OptionsHandler(methodHandlers));
-        }
-    }
-
-    private boolean pathExists(Map<String, Handler> pathHandlers) {
-        return pathHandlers != null;
-    }
-
-    private boolean methodExistsForPath(Map<String, Handler> pathHandlers, String method) {
-        return pathHandlers.containsKey(method);
+    private boolean routeExists(Route route) {
+        return route != null;
     }
 }

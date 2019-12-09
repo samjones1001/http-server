@@ -1,7 +1,7 @@
 package http.server;
 
 import http.server.handlers.HeadHandler;
-import http.server.handlers.NotFoundHandler;
+import http.server.handlers.MethodNotAllowedHandler;
 import http.server.handlers.OptionsHandler;
 
 import java.util.HashMap;
@@ -18,7 +18,7 @@ public class Route {
         if (methodHandlers.containsKey(methodVerb)) {
             return methodHandlers.get(methodVerb);
         } else {
-            return new NotFoundHandler();
+            return new MethodNotAllowedHandler(methodHandlers);
         }
     }
 
