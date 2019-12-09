@@ -1,9 +1,6 @@
 package http.server;
 
-import http.server.handlers.GetHandler;
-import http.server.handlers.HeadHandler;
-import http.server.handlers.OptionsHandler;
-import http.server.handlers.PostHandler;
+import http.server.handlers.*;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -59,6 +56,9 @@ public class Server {
             Server server = new Server(5000);
             server.addHandler("/simple_get", "GET", new GetHandler());
             server.addHandler("/method_options", "GET", new GetHandler());
+            server.addHandler("/method_options2", "GET", new GetHandler());
+            server.addHandler("/method_options2", "POST", new PostHandler());
+            server.addHandler("/method_options2", "PUT", new PutHandler());
             server.addHandler("/get_with_body", "HEAD", new HeadHandler());
             server.addHandler("/echo_body", "POST", new PostHandler());
             server.start();
