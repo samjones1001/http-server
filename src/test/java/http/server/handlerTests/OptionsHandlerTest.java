@@ -2,6 +2,7 @@ package http.server.handlerTests;
 
 import http.server.Handler;
 import http.server.Request;
+import http.server.RequestParser;
 import http.server.Response;
 import http.server.handlers.HeadHandler;
 import http.server.handlers.MethodNotAllowedHandler;
@@ -16,7 +17,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class OptionsHandlerTest {
     @Test
     void correctlySetsThePassedResponseAssigningHeadAndOptionsToAllowHeaderByDefault() throws IOException {
-        Request request = new Request(new BufferedReader(new InputStreamReader(new ByteArrayInputStream("OPTIONS /some_path HTTP/1.1\r\n\r\n".getBytes()))));
+        RequestParser rp = new RequestParser(new BufferedReader(new InputStreamReader(new ByteArrayInputStream("OPTIONS /some_path HTTP/1.1\r\n\r\n".getBytes()))));
+        Request request = rp.parse();
 
         String expectedHeaders = "HTTP/1.1 200 No Content\r\nConnection: Close\r\nContent-Length: 0\r\n" +
                 "Content-Type: text/html\r\nAllow: HEAD, OPTIONS\r\n\r\n";
@@ -35,7 +37,8 @@ public class OptionsHandlerTest {
 
     @Test
     void correctlySetsAnAlphabetisedAllowHeaderWhereOtherMethodsAvailable() throws IOException {
-        Request request = new Request(new BufferedReader(new InputStreamReader(new ByteArrayInputStream("OPTIONS /some_path HTTP/1.1\r\n\r\n".getBytes()))));
+        RequestParser rp = new RequestParser(new BufferedReader(new InputStreamReader(new ByteArrayInputStream("OPTIONS /some_path HTTP/1.1\r\n\r\n".getBytes()))));
+        Request request = rp.parse();
 
         String expectedHeaders = "HTTP/1.1 200 No Content\r\nConnection: Close\r\nContent-Length: 0\r\n" +
                 "Content-Type: text/html\r\nAllow: GET, HEAD, OPTIONS\r\n\r\n";

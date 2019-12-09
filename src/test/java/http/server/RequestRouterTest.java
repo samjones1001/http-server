@@ -50,8 +50,9 @@ public class RequestRouterTest {
         Handler handler = new HeadHandler();
         RequestRouter router = new RequestRouter();
 
-        router.addRoute("/some_path", "/GET", handler);
-        router.addRoute("/some_path", "/POST", handler);
+        router.addRoute("/some_path", "GET", handler);
+        router.addRoute("/some_path", "POST", handler);
+
         assertEquals(1, router.getRoutes().size());
     }
 
@@ -64,7 +65,6 @@ public class RequestRouterTest {
         MockSocket mockSocket = new MockSocket(in, out);
         RequestRouter router = new RequestRouter();
         router.addRoute("/some_path", "HEAD", new HeadHandler());
-        System.out.println(router.getRoutes().get("/some_path").getMethodHandlers());
 
         router.routeRequest(mockSocket);
 
@@ -77,7 +77,8 @@ public class RequestRouterTest {
         String requestText = "HEAD /some_path HTTP/1.1\r\n\r\n";
         InputStream inputStream = new ByteArrayInputStream(requestText.getBytes(Charset.forName("UTF-8")));
         BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
-        Request request = new Request(in);
+        RequestParser rp = new RequestParser(in);
+        Request request = rp.parse();
         RequestRouter router = new RequestRouter();
         router.addRoute("/some_path", "HEAD", new HeadHandler());
 
@@ -89,7 +90,8 @@ public class RequestRouterTest {
         String requestText = "HEAD /non_existant_page HTTP/1.1\r\n\r\n";
         InputStream inputStream = new ByteArrayInputStream(requestText.getBytes(Charset.forName("UTF-8")));
         BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
-        Request request = new Request(in);
+        RequestParser rp = new RequestParser(in);
+        Request request = rp.parse();
         RequestRouter router = new RequestRouter();
 
         assertTrue(router.retrieveHandler(request) instanceof NotFoundHandler);
@@ -100,7 +102,8 @@ public class RequestRouterTest {
         String requestText = "POST /some_path HTTP/1.1\r\n\r\n";
         InputStream inputStream = new ByteArrayInputStream(requestText.getBytes(Charset.forName("UTF-8")));
         BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
-        Request request = new Request(in);
+        RequestParser rp = new RequestParser(in);
+        Request request = rp.parse();
         RequestRouter router = new RequestRouter();
         router.addRoute("/some_path", "GET", new HeadHandler());
 

@@ -2,6 +2,7 @@ package http.server.handlerTests;
 
 import http.server.Handler;
 import http.server.Request;
+import http.server.RequestParser;
 import http.server.Response;
 import http.server.handlers.RedirectHandler;
 import org.junit.jupiter.api.Test;
@@ -13,7 +14,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class RedirectHandlerTest {
     @Test
     void correctlySetsThePassedResponse() throws IOException {
-        Request request = new Request(new BufferedReader(new InputStreamReader(new ByteArrayInputStream("GET /some_path HTTP/1.1\r\n\r\n".getBytes()))));
+        RequestParser rp = new RequestParser(new BufferedReader(new InputStreamReader(new ByteArrayInputStream("GET /some_path HTTP/1.1\r\n\r\n".getBytes()))));
+        Request request = rp.parse();
         String expectedHeaders = "HTTP/1.1 301 Moved Permanently\r\nConnection: Close\r\nContent-Length: 0\r\nLocation: http://127.0.0.1:5000/simple_get\r\n\r\n";
         OutputStream outputStream = new ByteArrayOutputStream();
         Response response = new Response(outputStream);

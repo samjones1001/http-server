@@ -12,24 +12,22 @@ import java.util.Map;
 
 public class RequestRouter {
     private Map<String, Route> routes = new HashMap<>();
-    private BufferedReader in;
-    private OutputStream out;
 
     public Map<String, Route> getRoutes() {
         return routes;
     }
 
     public void addRoute(String path, String method, Handler handler) {
-        Route route = new Route();
-        routes.putIfAbsent(path, route);
+        Route route = routes.computeIfAbsent(path, (k) -> new Route());
         route.addMethodHandler(method, handler);
     }
 
     public void routeRequest(Socket client) {
         try {
-            in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-            out = client.getOutputStream();
-            Request request = new Request(in);
+            BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+            OutputStream out = client.getOutputStream();
+            RequestParser rp = new RequestParser(in);
+            Request request = rp.parse();
             Response response = new Response(out);
             Handler handler = retrieveHandler(request);
             handler.setResponseValues(request, response);
@@ -41,10 +39,7 @@ public class RequestRouter {
 
     public Handler retrieveHandler(Request request) {
         Route route = routes.get(request.getPath());
-        if (routeExists(route)) {
-            return route.getMethodHandler(request.getMethod());
-        }
-        return new NotFoundHandler();
+        return routeExists(route) ? route.getMethodHandler(request.getMethod()) : new NotFoundHandler();
     }
 
     private boolean routeExists(Route route) {

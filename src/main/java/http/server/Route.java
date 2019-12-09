@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Route {
+    private static final String headString = "HEAD";
+    private static final String optionsString = "OPTIONS";
+
     private Map<String, Handler> methodHandlers = new HashMap<>();
 
     public Map<String, Handler> getMethodHandlers() {
@@ -15,11 +18,8 @@ public class Route {
     }
 
     public Handler getMethodHandler(String methodVerb) {
-        if (methodHandlers.containsKey(methodVerb)) {
-            return methodHandlers.get(methodVerb);
-        } else {
-            return new MethodNotAllowedHandler(methodHandlers);
-        }
+        return methodHandlers.containsKey(methodVerb) ?
+                methodHandlers.get(methodVerb) : new MethodNotAllowedHandler(methodHandlers);
     }
 
     public void addMethodHandler(String methodVerb, Handler handler) {
@@ -28,7 +28,7 @@ public class Route {
     }
 
     private void addDefaultMethods() {
-        methodHandlers.putIfAbsent("HEAD", new HeadHandler());
-        methodHandlers.put("OPTIONS", new OptionsHandler(methodHandlers));
+        methodHandlers.putIfAbsent(headString, new HeadHandler());
+        methodHandlers.put(optionsString, new OptionsHandler(methodHandlers));
     }
 }

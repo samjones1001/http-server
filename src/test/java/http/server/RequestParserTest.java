@@ -9,14 +9,14 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class RequestTest {
+public class RequestParserTest {
     @Test
     void parsesTheInitialLineOfAnHTTPRequest() throws IOException {
         String requestText = "GET /some_page.html HTTP/1.1\r\n\r\n";
         InputStream inputStream = new ByteArrayInputStream(requestText.getBytes(Charset.forName("UTF-8")));
         BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
-        RequestParser rp = new RequestParser(in);
 
+        RequestParser rp = new RequestParser(in);
         Request request = rp.parse();
 
         assertEquals("GET", request.getMethod());
@@ -31,8 +31,8 @@ public class RequestTest {
         }};
         InputStream inputStream = new ByteArrayInputStream(requestText.getBytes(Charset.forName("UTF-8")));
         BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
-        RequestParser rp = new RequestParser(in);
 
+        RequestParser rp = new RequestParser(in);
         Request request = rp.parse();
 
         assertEquals(expectedHeaders, request.getHeaders());
@@ -43,8 +43,8 @@ public class RequestTest {
         String requestText = "GET /some_page.html HTTP/1.1\r\nContent-Type: text/html\r\nContent-Length: 16\r\n\r\nThis is the body";
         InputStream inputStream = new ByteArrayInputStream(requestText.getBytes(Charset.forName("UTF-8")));
         BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
-        RequestParser rp = new RequestParser(in);
 
+        RequestParser rp = new RequestParser(in);
         Request request = rp.parse();
 
         assertEquals("This is the body", request.getBody());
