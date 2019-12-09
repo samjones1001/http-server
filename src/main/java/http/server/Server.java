@@ -15,8 +15,9 @@ public class Server {
         this.router = router;
     }
 
-    public Server(ServerSocket serverSocket) {
+    public Server(ServerSocket serverSocket, RequestRouter router) {
         this.serverSocket = serverSocket;
+        this.router = router;
     }
 
     public void start() throws IOException {
@@ -33,14 +34,14 @@ public class Server {
     public static void main(String[] args) {
         try {
             RequestRouter router = new RequestRouter();
-            router.addHandler("/simple_get", "GET", new GetHandler());
-            router.addHandler("/method_options", "GET", new GetHandler());
-            router.addHandler("/method_options2", "GET", new GetHandler());
-            router.addHandler("/method_options2", "POST", new PostHandler());
-            router.addHandler("/method_options2", "PUT", new PutHandler());
-            router.addHandler("/get_with_body", "HEAD", new HeadHandler());
-            router.addHandler("/echo_body", "POST", new PostHandler());
-            router.addHandler("/redirect", "GET", new RedirectHandler());
+            router.addRoute("/simple_get", "GET", new GetHandler());
+            router.addRoute("/method_options", "GET", new GetHandler());
+            router.addRoute("/method_options2", "GET", new GetHandler());
+            router.addRoute("/method_options2", "POST", new PostHandler());
+            router.addRoute("/method_options2", "PUT", new PutHandler());
+            router.addRoute("/get_with_body", "HEAD", new HeadHandler());
+            router.addRoute("/echo_body", "POST", new PostHandler());
+            router.addRoute("/redirect", "GET", new RedirectHandler());
 
             Server server = new Server(5000, router);
             server.start();

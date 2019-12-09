@@ -1,6 +1,5 @@
 package http.server;
 
-import http.server.handlers.GetHandler;
 import http.server.handlers.HeadHandler;
 import http.server.mocks.MockServerSocket;
 import http.server.mocks.MockSocket;
@@ -9,36 +8,9 @@ import org.junit.jupiter.api.Test;
 import java.io.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ServerTest {
-    @Test
-    void addsANewHandlerToTheListOfHandlers() throws IOException {
-        Handler handler = new HeadHandler();
-        Server server = new Server(new MockServerSocket());
-        server.addHandler("/some_path", "HEAD", handler);
-        assertEquals(handler, server.getHandlers().get("/some_path").get("HEAD"));
-    }
 
-    @Test
-    void addingANewPathToTheListOfHandlersAlsoAddsDefaultMethods() throws IOException {
-        Handler handler = new GetHandler();
-        Server server = new Server(new MockServerSocket());
-        server.addHandler("/some_path", "GET", handler);
-
-        assertTrue(server.getHandlers().get("/some_path").containsKey("HEAD"));
-        assertTrue(server.getHandlers().get("/some_path").containsKey("OPTIONS"));
-    }
-
-    @Test
-    void multipleMethodsOnTheSamePathAreNestedTogether() throws IOException {
-        Handler handler = new HeadHandler();
-        Server server = new Server(new MockServerSocket());
-        server.addHandler("/some_path", "/GET", handler);
-        server.addHandler("/some_path", "/POST", handler);
-        int numberOfMethodsAddedPlusDefaultMethods = 4;
-        assertEquals(numberOfMethodsAddedPlusDefaultMethods, server.getHandlers().get("/some_path").size());
-    }
 
     @Test
     void acceptsAndProcessesAConnection() throws IOException {
@@ -48,8 +20,10 @@ public class ServerTest {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         MockSocket mockSocket = new MockSocket(in ,out);
         Handler handler = new HeadHandler();
-        Server server = new Server(new MockServerSocket(mockSocket));
-        server.addHandler("/some_path", "HEAD", handler);
+        RequestRouter router = new RequestRouter();
+        router.addRoute("/some_path", "HEAD", handler);
+
+        Server server = new Server(new MockServerSocket(mockSocket), router);
 
         server.start();
         assertEquals(expectedResponse, out.toString());

@@ -1,8 +1,10 @@
 package http.server;
 
+import http.server.handlers.GetHandler;
 import http.server.handlers.HeadHandler;
 import http.server.handlers.MethodNotAllowedHandler;
 import http.server.handlers.NotFoundHandler;
+import http.server.mocks.MockServerSocket;
 import http.server.mocks.MockSocket;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,15 +38,45 @@ public class RequestRouterTest {
     }
 
     @Test
+    void addsANewHandlerToTheListOfHandlers() throws IOException {
+        Handler handler = new HeadHandler();
+        RequestRouter router = new RequestRouter();
+        router.addRoute("/some_path", "HEAD", handler);
+        assertEquals(handler, router.getRoutes().get("/some_path").get("HEAD"));
+    }
+
+    @Test
+    void addingANewPathToTheListOfHandlersAlsoAddsDefaultMethods() throws IOException {
+        Handler handler = new GetHandler();
+        RequestRouter router = new RequestRouter();
+        router.addRoute("/some_path", "GET", handler);
+
+        assertTrue(router.getRoutes().get("/some_path").containsKey("HEAD"));
+        assertTrue(router.getRoutes().get("/some_path").containsKey("OPTIONS"));
+    }
+
+    @Test
+    void multipleMethodsOnTheSamePathAreNestedTogether() throws IOException {
+        Handler handler = new HeadHandler();
+        RequestRouter router = new RequestRouter();
+
+        router.addRoute("/some_path", "/GET", handler);
+        router.addRoute("/some_path", "/POST", handler);
+        int numberOfMethodsAddedPlusDefaultMethods = 4;
+        assertEquals(numberOfMethodsAddedPlusDefaultMethods, router.getRoutes().get("/some_path").size());
+    }
+
+    @Test
     void processesARequestAndSendsAResponseToTheClient() throws IOException {
         String requestText = "HEAD /some_path HTTP/1.1\r\n\r\n";
         String expectedResponseText = "HTTP/1.1 200 OK\r\nConnection: Close\r\nContent-Type: text/html\r\n\r\n";
         ByteArrayInputStream in = new ByteArrayInputStream(requestText.getBytes());
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         MockSocket mockSocket = new MockSocket(in, out);
-        RequestRouter router = new RequestRouter(mockSocket, handlers);
+        RequestRouter router = new RequestRouter();
+        router.addRoute("/some_path", "HEAD", new HeadHandler());
 
-        router.routeRequest();
+        router.routeRequest(mockSocket);
 
         assertEquals(expectedResponseText, out.toString());
     }
@@ -56,9 +88,10 @@ public class RequestRouterTest {
         InputStream inputStream = new ByteArrayInputStream(requestText.getBytes(Charset.forName("UTF-8")));
         BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
         Request request = new Request(in);
-        RequestRouter router = new RequestRouter(new Socket(), handlers);
+        RequestRouter router = new RequestRouter();
+        router.addRoute("/some_path", "HEAD", new HeadHandler());
 
-        assertEquals(expectedHandler, router.retrieveHandler(request));
+        assertTrue(router.retrieveHandler(request) instanceof HeadHandler);
     }
 
     @Test
@@ -67,7 +100,7 @@ public class RequestRouterTest {
         InputStream inputStream = new ByteArrayInputStream(requestText.getBytes(Charset.forName("UTF-8")));
         BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
         Request request = new Request(in);
-        RequestRouter router = new RequestRouter(new Socket(), handlers);
+        RequestRouter router = new RequestRouter();
 
         assertTrue(router.retrieveHandler(request) instanceof NotFoundHandler);
     }
@@ -78,7 +111,9 @@ public class RequestRouterTest {
         InputStream inputStream = new ByteArrayInputStream(requestText.getBytes(Charset.forName("UTF-8")));
         BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
         Request request = new Request(in);
-        RequestRouter router = new RequestRouter(new Socket(), handlers);
+        RequestRouter router = new RequestRouter();
+        router.addRoute("/some_path", "GET", new HeadHandler());
+
 
         assertTrue(router.retrieveHandler(request) instanceof MethodNotAllowedHandler);
     }

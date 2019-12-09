@@ -14,16 +14,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RequestRouter {
-    private Map<String, Map<String, Handler>> handlers = new HashMap<>();
+    private Map<String, Map<String, Handler>> routes = new HashMap<>();
     private BufferedReader in;
     private OutputStream out;
 
-    public Map<String, Map<String, Handler>> getHandlers() {
-        return handlers;
+    public Map<String, Map<String, Handler>> getRoutes() {
+        return routes;
     }
 
-    public void addHandler(String path, String method, Handler handler) {
-        Map<String, Handler> pathHandlers = handlers.computeIfAbsent(path, key -> new HashMap<>());
+    public void addRoute(String path, String method, Handler handler) {
+        Map<String, Handler> pathHandlers = routes.computeIfAbsent(path, key -> new HashMap<>());
         pathHandlers.put(method, handler);
         addDefaultHandlers(pathHandlers);
     }
@@ -43,7 +43,7 @@ public class RequestRouter {
     }
 
     public Handler retrieveHandler(Request request) {
-        Map<String, Handler> pathHandlers = handlers.get(request.getPath());
+        Map<String, Handler> pathHandlers = routes.get(request.getPath());
 
         if (pathExists(pathHandlers)) {
             return methodExistsForPath(pathHandlers, request.getMethod()) ?
