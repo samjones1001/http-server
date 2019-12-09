@@ -20,6 +20,14 @@ application {
     mainClassName = 'http.server.Server'
 }
 
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'http.server.Server'
+        )
+    }
+}
+
 test {
     useJUnitPlatform()
 }

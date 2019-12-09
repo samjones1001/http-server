@@ -5,29 +5,18 @@ import http.server.handlers.*;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.Map;
 
 public class Server {
-    private Map<String, Map<String, Handler>> handlers = new HashMap<>();
+    private RequestRouter router;
     private ServerSocket serverSocket;
 
-    public Server(int port) throws IOException {
+    public Server(int port, RequestRouter router) throws IOException {
         this.serverSocket = new ServerSocket(port);
+        this.router = router;
     }
 
     public Server(ServerSocket serverSocket) {
         this.serverSocket = serverSocket;
-    }
-
-    public Map<String, Map<String, Handler>> getHandlers() {
-        return handlers;
-    }
-
-    public void addHandler(String path, String method, Handler handler) {
-        Map<String, Handler> pathHandlers = handlers.computeIfAbsent(path, key -> new HashMap<>());
-        pathHandlers.put(method, handler);
-        addDefaultHandlers(pathHandlers);
     }
 
     public void start() throws IOException {
@@ -38,34 +27,25 @@ public class Server {
     }
 
     private void handleConnection(Socket client) {
-        RequestRouter router = new RequestRouter(client, handlers);
-        router.routeRequest();
-    }
-
-    private void addDefaultHandlers(Map<String, Handler> methodHandlers) {
-        if (!methodHandlers.containsKey("HEAD")) {
-            methodHandlers.put("HEAD", new HeadHandler());
-        }
-        if (!methodHandlers.containsKey("OPTIONS")) {
-            methodHandlers.put("OPTIONS", new OptionsHandler(methodHandlers));
-        }
+        router.routeRequest(client);
     }
 
     public static void main(String[] args) {
         try {
-            Server server = new Server(5000);
-            server.addHandler("/simple_get", "GET", new GetHandler());
-            server.addHandler("/method_options", "GET", new GetHandler());
-            server.addHandler("/method_options2", "GET", new GetHandler());
-            server.addHandler("/method_options2", "POST", new PostHandler());
-            server.addHandler("/method_options2", "PUT", new PutHandler());
-            server.addHandler("/get_with_body", "HEAD", new HeadHandler());
-            server.addHandler("/echo_body", "POST", new PostHandler());
-            server.addHandler("/redirect", "GET", new RedirectHandler());
+            RequestRouter router = new RequestRouter();
+            router.addHandler("/simple_get", "GET", new GetHandler());
+            router.addHandler("/method_options", "GET", new GetHandler());
+            router.addHandler("/method_options2", "GET", new GetHandler());
+            router.addHandler("/method_options2", "POST", new PostHandler());
+            router.addHandler("/method_options2", "PUT", new PutHandler());
+            router.addHandler("/get_with_body", "HEAD", new HeadHandler());
+            router.addHandler("/echo_body", "POST", new PostHandler());
+            router.addHandler("/redirect", "GET", new RedirectHandler());
+
+            Server server = new Server(5000, router);
             server.start();
         } catch (IOException err) {
             System.out.println(err.getMessage());
         }
-
     }
 }
