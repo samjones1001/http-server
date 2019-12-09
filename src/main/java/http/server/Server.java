@@ -61,6 +61,7 @@ public class Server {
             server.addHandler("/method_options2", "PUT", new PutHandler());
             server.addHandler("/get_with_body", "HEAD", new HeadHandler());
             server.addHandler("/echo_body", "POST", new PostHandler());
+            server.addHandler("/redirect", "GET", new RedirectHandler());
             server.start();
         } catch (IOException err) {
             System.out.println(err.getMessage());
