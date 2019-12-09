@@ -1,6 +1,7 @@
 package http.server.handlers;
 
 import http.server.Handler;
+import http.server.Request;
 import http.server.Response;
 
 import java.util.*;
@@ -12,7 +13,7 @@ public class OptionsHandler implements Handler {
         this.methodHandlers = methodHandlers;
     }
 
-    public void setResponseValues(Response response) {
+    public void setResponseValues(Request request, Response response) {
         response.setStatusCode(200, "No Content");
         response.addHeader("Content-Type", "text/html");
         response.addHeader("Allow", allowedMethodsHeaderValue());

@@ -36,14 +36,14 @@ public class ServerTest {
         Server server = new Server(new MockServerSocket());
         server.addHandler("/some_path", "/GET", handler);
         server.addHandler("/some_path", "/POST", handler);
-        int numberOfMethodsAddedPlusDefaultMethods = 3;
+        int numberOfMethodsAddedPlusDefaultMethods = 4;
         assertEquals(numberOfMethodsAddedPlusDefaultMethods, server.getHandlers().get("/some_path").size());
     }
 
     @Test
     void acceptsAndProcessesAConnection() throws IOException {
         String expectedResponse = "HTTP/1.1 200 OK\r\nConnection: Close\r\nContent-Type: text/html\r\n\r\n";
-        String requestText = "HEAD /some_path HTTP/1.1";
+        String requestText = "HEAD /some_path HTTP/1.1\r\n\r\n";
         ByteArrayInputStream in = new ByteArrayInputStream(requestText.getBytes());
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         MockSocket mockSocket = new MockSocket(in ,out);

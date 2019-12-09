@@ -28,7 +28,7 @@ public class RequestRouter {
             Request request = new Request(in);
             Response response = new Response(out);
             Handler handler = retrieveHandler(request);
-            handler.setResponseValues(response);
+            handler.setResponseValues(request, response);
             response.send();
         } catch (IOException err) {
             System.out.println(err.getMessage());

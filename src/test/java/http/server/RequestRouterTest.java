@@ -37,7 +37,7 @@ public class RequestRouterTest {
 
     @Test
     void processesARequestAndSendsAResponseToTheClient() throws IOException {
-        String requestText = "HEAD /some_path HTTP/1.1";
+        String requestText = "HEAD /some_path HTTP/1.1\r\n\r\n";
         String expectedResponseText = "HTTP/1.1 200 OK\r\nConnection: Close\r\nContent-Type: text/html\r\n\r\n";
         ByteArrayInputStream in = new ByteArrayInputStream(requestText.getBytes());
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -52,7 +52,7 @@ public class RequestRouterTest {
     @Test
     void retrievesTheHandlerForThePassedRequest() throws IOException {
         Handler expectedHandler = handlers.get("/some_path").get("HEAD");
-        String requestText = "HEAD /some_path HTTP/1.1";
+        String requestText = "HEAD /some_path HTTP/1.1\r\n\r\n";
         InputStream inputStream = new ByteArrayInputStream(requestText.getBytes(Charset.forName("UTF-8")));
         BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
         Request request = new Request(in);
@@ -63,7 +63,7 @@ public class RequestRouterTest {
 
     @Test
     void returnsANotFoundHandlerIfNoMatchingHandlerFound() throws IOException {
-        String requestText = "HEAD /non_existant_page HTTP/1.1";
+        String requestText = "HEAD /non_existant_page HTTP/1.1\r\n\r\n";
         InputStream inputStream = new ByteArrayInputStream(requestText.getBytes(Charset.forName("UTF-8")));
         BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
         Request request = new Request(in);
@@ -74,7 +74,7 @@ public class RequestRouterTest {
 
     @Test
     void returnsAMethodNotAllowedHandlerIfPathExistsButDoesNotRespondToMethod() {
-        String requestText = "POST /some_path HTTP/1.1";
+        String requestText = "POST /some_path HTTP/1.1\r\n\r\n";
         InputStream inputStream = new ByteArrayInputStream(requestText.getBytes(Charset.forName("UTF-8")));
         BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
         Request request = new Request(in);
