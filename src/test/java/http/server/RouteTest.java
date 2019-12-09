@@ -1,10 +1,7 @@
 package http.server;
 
-import http.server.Handler;
-import http.server.Route;
 import http.server.handlers.GetHandler;
 import http.server.handlers.MethodNotAllowedHandler;
-import http.server.handlers.NotFoundHandler;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

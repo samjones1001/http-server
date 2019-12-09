@@ -1,16 +1,13 @@
 package http.server;
 
-import http.server.handlers.GetHandler;
 import http.server.handlers.HeadHandler;
 import http.server.handlers.MethodNotAllowedHandler;
 import http.server.handlers.NotFoundHandler;
-import http.server.mocks.MockServerSocket;
 import http.server.mocks.MockSocket;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.*;
-import java.net.Socket;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;

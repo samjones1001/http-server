@@ -16,20 +16,20 @@ public class Response {
        this.out = out;
     }
 
-    public Map<String, String> getHeaders() {
-        return headers;
-    }
-
-    public String getBody() { return this.body; }
-
-    public void setStatusCode(int code, String message) {
+    public void setStatus(int code, String message) {
         this.statusCode = code;
         this.statusMessage = message;
+    }
+
+    public Map<String, String> getHeaders() {
+        return headers;
     }
 
     public void addHeader(String name, String value) {
         this.headers.put(name, value);
     }
+
+    public String getBody() { return this.body; }
 
     public void addBody(String body) {
         addHeader("Content-Length", Integer.toString(body.length()));
@@ -38,25 +38,7 @@ public class Response {
 
     public void send() throws IOException  {
         headers.put("Connection", "Close");
-        String response = buildHeaders(buildResponseLine());
-        if (body != null) {
-            response += body;
-        }
+        String response = ResponseBuilder.buildResponse(statusCode, statusMessage, headers, body);
         out.write((response).getBytes());
-    }
-
-    private String buildResponseLine() {
-        return "HTTP/1.1 " + statusCode + " " + statusMessage + "\r\n";
-    }
-
-    private String buildHeaders(String response) {
-        for (String headerName : headers.keySet()) {
-            response += buildHeaderLine(headerName);
-        }
-        return response + "\r\n";
-    }
-
-    private String buildHeaderLine(String headerName) {
-        return headerName + ": " + headers.get(headerName) + "\r\n";
     }
 }

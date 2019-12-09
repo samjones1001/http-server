@@ -4,7 +4,6 @@ import http.server.Handler;
 import http.server.Request;
 import http.server.RequestParser;
 import http.server.Response;
-import http.server.handlers.GetHandler;
 import http.server.handlers.PutHandler;
 import org.junit.jupiter.api.Test;
 

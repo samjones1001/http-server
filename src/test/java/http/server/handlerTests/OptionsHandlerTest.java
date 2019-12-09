@@ -5,7 +5,6 @@ import http.server.Request;
 import http.server.RequestParser;
 import http.server.Response;
 import http.server.handlers.HeadHandler;
-import http.server.handlers.MethodNotAllowedHandler;
 import http.server.handlers.OptionsHandler;
 import org.junit.jupiter.api.Test;
 

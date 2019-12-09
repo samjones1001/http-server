@@ -14,7 +14,7 @@ public class OptionsHandler implements Handler {
     }
 
     public void setResponseValues(Request request, Response response) {
-        response.setStatusCode(200, "No Content");
+        response.setStatus(200, "No Content");
         response.addHeader("Content-Type", "text/html");
         response.addHeader("Allow", allowedMethodsHeaderValue());
         response.addBody("");

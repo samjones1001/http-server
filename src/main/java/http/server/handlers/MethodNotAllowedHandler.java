@@ -14,7 +14,7 @@ public class MethodNotAllowedHandler implements Handler {
     }
 
     public void setResponseValues(Request request, Response response) {
-        response.setStatusCode(405, "Method Not Allowed");
+        response.setStatus(405, "Method Not Allowed");
         response.addHeader("Content-Type", "text/html");
         response.addHeader("Allow", allowedMethodsHeaderValue());
         response.addBody("");

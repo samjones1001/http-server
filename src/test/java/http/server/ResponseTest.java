@@ -38,7 +38,7 @@ public class ResponseTest {
         OutputStream outputStream = new ByteArrayOutputStream();
         Response response = new Response(outputStream);
 
-        response.setStatusCode(200, "OK");
+        response.setStatus(200, "OK");
         response.addHeader("Content-Type", "text/html");
 
         response.send();
@@ -52,7 +52,7 @@ public class ResponseTest {
         OutputStream outputStream = new ByteArrayOutputStream();
         Response response = new Response(outputStream);
 
-        response.setStatusCode(200, "OK");
+        response.setStatus(200, "OK");
         response.addHeader("Content-Type", "text/html");
         response.addBody("This is a body");
 

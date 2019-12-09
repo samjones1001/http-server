@@ -6,7 +6,7 @@ import http.server.Response;
 
 public class PutHandler implements Handler {
     public void setResponseValues(Request request, Response response) {
-        response.setStatusCode(201, "Created");
+        response.setStatus(201, "Created");
         response.addHeader("Content-Type", "text/html");
         response.addBody("");
     }
