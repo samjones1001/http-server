@@ -4,7 +4,7 @@ import http.server.Handler;
 
 import java.util.*;
 
-public class OptionsHandler {
+public abstract class OptionsHandler {
     private final Map<String, Handler> methodHandlers;
 
     public OptionsHandler(Map<String, Handler> methodHandlers) {

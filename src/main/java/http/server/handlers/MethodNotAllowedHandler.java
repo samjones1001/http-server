@@ -4,7 +4,7 @@ import http.server.Handler;
 
 import java.util.*;
 
-public class MethodNotAllowedHandler {
+public abstract class MethodNotAllowedHandler {
 
     public static Handler getHandler(Set<String> allowedMethods) {
         return (((request, response) -> {
