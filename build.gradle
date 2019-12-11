@@ -17,13 +17,13 @@ dependencies {
 }
 
 application {
-    mainClassName = 'http.server.Server'
+    mainClassName = 'http.server.App'
 }
 
 jar {
     manifest {
         attributes(
-                'Main-Class': 'http.server.Server'
+                'Main-Class': 'http.server.App'
         )
     }
 }
