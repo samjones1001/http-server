@@ -19,7 +19,7 @@ public class ServerTest {
         ByteArrayInputStream in = new ByteArrayInputStream(requestText.getBytes());
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         MockSocket mockSocket = new MockSocket(in ,out);
-        Handler handler = new HeadHandler();
+        Handler handler = HeadHandler.getHandler();
         RequestRouter router = new RequestRouter();
         router.addRoute("/some_path", "HEAD", handler);
 

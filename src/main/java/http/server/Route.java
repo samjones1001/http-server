@@ -19,7 +19,7 @@ public class Route {
 
     public Handler getMethodHandler(String methodVerb) {
         return methodHandlers.containsKey(methodVerb) ?
-                methodHandlers.get(methodVerb) : new MethodNotAllowedHandler(methodHandlers);
+                methodHandlers.get(methodVerb) : MethodNotAllowedHandler.getHandler(methodHandlers.keySet());
     }
 
     public void addMethodHandler(String methodVerb, Handler handler) {
@@ -28,7 +28,7 @@ public class Route {
     }
 
     private void addDefaultMethods() {
-        methodHandlers.putIfAbsent(headString, new HeadHandler());
-        methodHandlers.put(optionsString, new OptionsHandler(methodHandlers));
+        methodHandlers.putIfAbsent(headString, HeadHandler.getHandler());
+        methodHandlers.put(optionsString, OptionsHandler.getHandler(methodHandlers.keySet()));
     }
 }

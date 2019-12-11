@@ -20,7 +20,7 @@ public class HeadHandlerTest {
         String expectedHeaders = "HTTP/1.1 200 OK\r\nConnection: Close\r\nContent-Type: text/html\r\n\r\n";
         OutputStream outputStream = new ByteArrayOutputStream();
         Response response = new Response(outputStream);
-        Handler headHandler = new HeadHandler();
+        Handler headHandler = HeadHandler.getHandler();
 
         headHandler.setResponseValues(request, response);
         response.send();

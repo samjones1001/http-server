@@ -39,7 +39,7 @@ public class RequestRouter {
 
     public Handler retrieveHandler(Request request) {
         Route route = routes.get(request.getPath());
-        return routeExists(route) ? route.getMethodHandler(request.getMethod()) : new NotFoundHandler();
+        return routeExists(route) ? route.getMethodHandler(request.getMethod()) : NotFoundHandler.getHandler();
     }
 
     private boolean routeExists(Route route) {

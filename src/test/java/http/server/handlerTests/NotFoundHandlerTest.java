@@ -20,7 +20,7 @@ public class NotFoundHandlerTest {
         String expectedHeaders = "HTTP/1.1 404 Not Found\r\nConnection: Close\r\nContent-Length: 0\r\n\r\n";
         OutputStream outputStream = new ByteArrayOutputStream();
         Response response = new Response(outputStream);
-        Handler notFoundHandler = new NotFoundHandler();
+        Handler notFoundHandler = NotFoundHandler.getHandler();
 
         notFoundHandler.setResponseValues(request, response);
         response.send();

@@ -1,38 +1,31 @@
 package http.server.handlers;
 
 import http.server.Handler;
-import http.server.Request;
-import http.server.Response;
 
 import java.util.*;
 
-public class OptionsHandler implements Handler {
+public class OptionsHandler {
     private final Map<String, Handler> methodHandlers;
 
     public OptionsHandler(Map<String, Handler> methodHandlers) {
         this.methodHandlers = methodHandlers;
     }
 
-    public void setResponseValues(Request request, Response response) {
-        response.setStatus(200, "No Content");
-        response.addHeader("Content-Type", "text/html");
-        response.addHeader("Allow", allowedMethodsHeaderValue());
-        response.addBody("");
+    public static Handler getHandler(Set<String> availableMethods) {
+        return (((request, response) -> {
+            response.setStatus(200, "No Content");
+            response.addHeader("Content-Type", "text/html");
+            response.addHeader("Allow", allowedMethodsHeaderValue(availableMethods));
+            response.addBody("");
+        }));
     }
 
-    private String allowedMethodsHeaderValue() {
-        Set<String> allowedMethods = new HashSet<>() {{
-            add("HEAD");
-            add("OPTIONS");
-        }};
-        return String.join(", ", buildAllowedMethodsList(allowedMethods));
+    private static String allowedMethodsHeaderValue(Set<String> availableMethods) {
+        return String.join(", ", buildAllowedMethodsList(availableMethods));
     }
 
-    private ArrayList<String> buildAllowedMethodsList(Set<String> allowedMethods) {
-        for (String method: methodHandlers.keySet()) {
-            allowedMethods.add(method);
-        }
-        ArrayList<String> allowedMethodsList = new ArrayList<>(allowedMethods);
+    private static ArrayList<String> buildAllowedMethodsList(Set<String> availableMethods) {
+        ArrayList<String> allowedMethodsList = new ArrayList<>(availableMethods);
         Collections.sort(allowedMethodsList);
         return allowedMethodsList;
     }
