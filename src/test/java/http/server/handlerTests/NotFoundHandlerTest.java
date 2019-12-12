@@ -14,14 +14,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class NotFoundHandlerTest {
     @Test
     void correctlySetsThePassedResponse() throws IOException {
-        RequestParser rp = new RequestParser(new BufferedReader(new InputStreamReader(new ByteArrayInputStream("POST /some_path HTTP/1.1\r\n\r\n".getBytes()))));
-        Request request = rp.parse();
-
+        String requestString = "POST /some_path HTTP/1.1\r\n\r\n";
         String expectedHeaders = "HTTP/1.1 404 Not Found\r\nConnection: Close\r\nContent-Length: 0\r\n\r\n";
+        RequestParser rp = new RequestParser(new BufferedReader(new InputStreamReader(new ByteArrayInputStream(requestString.getBytes()))));
         OutputStream outputStream = new ByteArrayOutputStream();
         Response response = new Response(outputStream);
         Handler notFoundHandler = NotFoundHandler.getHandler();
 
+        Request request = rp.parse();
         notFoundHandler.setResponseValues(request, response);
         response.send();
 

@@ -3,7 +3,6 @@ package http.server;
 import org.junit.jupiter.api.Test;
 
 import java.io.*;
-import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,7 +12,7 @@ public class RequestParserTest {
     @Test
     void parsesTheInitialLineOfAnHTTPRequest() throws IOException {
         String requestText = "GET /some_page.html HTTP/1.1\r\n\r\n";
-        InputStream inputStream = new ByteArrayInputStream(requestText.getBytes(Charset.forName("UTF-8")));
+        InputStream inputStream = new ByteArrayInputStream(requestText.getBytes());
         BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
 
         RequestParser rp = new RequestParser(in);
@@ -29,7 +28,7 @@ public class RequestParserTest {
         Map<String, String> expectedHeaders = new HashMap<>(){{
             put("Content-Type", "text/html");
         }};
-        InputStream inputStream = new ByteArrayInputStream(requestText.getBytes(Charset.forName("UTF-8")));
+        InputStream inputStream = new ByteArrayInputStream(requestText.getBytes());
         BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
 
         RequestParser rp = new RequestParser(in);
@@ -41,7 +40,7 @@ public class RequestParserTest {
     @Test
     void parsesTheBodyOfAnHTTPRequestIfPresent() throws IOException {
         String requestText = "GET /some_page.html HTTP/1.1\r\nContent-Type: text/html\r\nContent-Length: 16\r\n\r\nThis is the body";
-        InputStream inputStream = new ByteArrayInputStream(requestText.getBytes(Charset.forName("UTF-8")));
+        InputStream inputStream = new ByteArrayInputStream(requestText.getBytes());
         BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
 
         RequestParser rp = new RequestParser(in);

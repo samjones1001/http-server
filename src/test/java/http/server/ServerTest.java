@@ -14,8 +14,8 @@ public class ServerTest {
 
     @Test
     void acceptsAndProcessesAConnection() throws IOException {
-        String expectedResponse = "HTTP/1.1 200 OK\r\nConnection: Close\r\nContent-Type: text/html\r\n\r\n";
         String requestText = "HEAD /some_path HTTP/1.1\r\n\r\n";
+        String expectedResponse = "HTTP/1.1 200 OK\r\nConnection: Close\r\nContent-Type: text/html\r\n\r\n";
         ByteArrayInputStream in = new ByteArrayInputStream(requestText.getBytes());
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         MockSocket mockSocket = new MockSocket(in ,out);
