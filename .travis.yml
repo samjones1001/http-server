@@ -4,6 +4,14 @@ os: linux
 dist: trusty
 jdk: oraclejdk13
 
+script:
+  - ./gradlew jar
+  - java -jar build/libs/http-server.jar &
+  - cd feature-tests
+  - bundle install
+  - bundle exec spinach
+  - cd ..
+
 after_success:
-  - ./gradlew jacocoTestReport
+  - ./gradlew test jacocoTestReport
   - bash <(curl -s https://codecov.io/bash)
