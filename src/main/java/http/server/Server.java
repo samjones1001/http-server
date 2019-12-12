@@ -1,34 +1,16 @@
 package http.server;
 
-import http.server.handlers.GetHandler;
-import http.server.handlers.HeadHandler;
-
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.Map;
 
 public class Server {
-    private Map<String, Map<String, Handler>> handlers = new HashMap<>();
+    private RequestRouter router;
     private ServerSocket serverSocket;
 
-    public Server(int port) throws IOException {
-        this.serverSocket = new ServerSocket(port);
-    }
-
-    public Server(ServerSocket serverSocket) {
+    public Server(ServerSocket serverSocket, RequestRouter router) {
         this.serverSocket = serverSocket;
-    }
-
-    public Map<String, Map<String, Handler>> getHandlers() {
-        return handlers;
-    }
-
-    public void addHandler(String path, String method, Handler handler) {
-        Map<String, Handler> pathHandlers = handlers.computeIfAbsent(path, key -> new HashMap<>());
-        pathHandlers.put(method, handler);
-        addDefaultHandlers(pathHandlers);
+        this.router = router;
     }
 
     public void start() throws IOException {
@@ -38,26 +20,7 @@ public class Server {
         }
     }
 
-    private void handleConnection(Socket client) {
-        RequestRouter router = new RequestRouter(client, handlers);
-        router.routeRequest();
-    }
-
-    private void addDefaultHandlers(Map<String, Handler> pathHandlers) {
-        if (!pathHandlers.containsKey("HEAD")) {
-            pathHandlers.put("HEAD", new HeadHandler());
-        }
-    }
-
-    public static void main(String[] args) {
-        try {
-            Server server = new Server(5000);
-            server.addHandler("/simple_get", "GET", new GetHandler());
-            server.addHandler("/get_with_body", "HEAD", new HeadHandler());
-            server.start();
-        } catch (IOException err) {
-            System.out.println(err.getMessage());
-        }
-
+    private void handleConnection(Socket client) throws IOException {
+        router.routeRequest(client);
     }
 }

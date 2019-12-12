@@ -1,39 +1,35 @@
 package http.server;
 
-import java.io.BufferedReader;
-import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Request {
-    private BufferedReader in;
     private String method;
     private String path;
-
-    public Request(BufferedReader in) {
-        this.in = in;
-        parse();
-    }
+    private Map<String, String> headers = new HashMap<>();
+    private String body;
 
     public String getMethod() {
         return this.method;
     }
 
+    public void setMethod(String method) { this.method = method; }
+
     public String getPath() {
         return this.path;
     }
 
-    private void parse() {
-        try {
-            parseRequestLine();
-        } catch (IOException err) {
-            System.out.println(err.getMessage());
-        }
+    public void setPath(String path) { this.path = path; }
+
+    public Map<String, String> getHeaders() {
+        return this.headers;
     }
 
-    private void parseRequestLine() throws IOException {
-        String requestLine = in.readLine();
-        String[] requestLineComponents = requestLine.split(" ", 3);
+    public void addHeader(String key, String value) { this.headers.put(key, value); }
 
-        this.method = requestLineComponents[0];
-        this.path = requestLineComponents[1];
+    public String getBody() {
+       return this.body;
     }
+
+    public void setBody(String body) { this.body = body; }
 }

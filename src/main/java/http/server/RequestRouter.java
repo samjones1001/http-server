@@ -1,6 +1,5 @@
 package http.server;
 
-import http.server.handlers.MethodNotAllowedHandler;
 import http.server.handlers.NotFoundHandler;
 
 import java.io.BufferedReader;
@@ -8,50 +7,38 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.HashMap;
 import java.util.Map;
 
 public class RequestRouter {
-    private Socket socket;
-    private Map<String, Map<String, Handler>> handlers;
-    private BufferedReader in;
-    private OutputStream out;
+    private Map<String, Route> routes = new HashMap<>();
 
-    public RequestRouter(Socket socket, Map<String, Map<String, Handler>> handlers) {
-        this.socket = socket;
-        this.handlers = handlers;
+    public Map<String, Route> getRoutes() {
+        return routes;
     }
 
-    public void routeRequest() {
-        try {
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            out = socket.getOutputStream();
-            Request request = new Request(in);
-            Response response = new Response(out);
-            Handler handler = retrieveHandler(request);
-            handler.setResponseValues(response);
-            response.send();
-        } catch (IOException err) {
-            System.out.println(err.getMessage());
-        }
+    public void addRoute(String path, String method, Handler handler) {
+        Route route = routes.computeIfAbsent(path, (k) -> new Route());
+        route.addMethodHandler(method, handler);
+    }
+
+    public void routeRequest(Socket client) throws IOException {
+        BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+        OutputStream out = client.getOutputStream();
+        RequestParser rp = new RequestParser(in);
+        Request request = rp.parse();
+        Response response = new Response(out);
+        Handler handler = retrieveHandler(request);
+        handler.setResponseValues(request, response);
+        response.send();
     }
 
     public Handler retrieveHandler(Request request) {
-        Map<String, Handler> pathHandlers = handlers.get(request.getPath());
-
-        if (pathExists(pathHandlers)) {
-            return methodExistsForPath(pathHandlers, request.getMethod()) ?
-                    pathHandlers.get(request.getMethod()) :
-                    new MethodNotAllowedHandler(pathHandlers);
-        } else {
-            return new NotFoundHandler();
-        }
+        Route route = routes.get(request.getPath());
+        return routeExists(route) ? route.getMethodHandler(request.getMethod()) : NotFoundHandler.getHandler();
     }
 
-    private boolean pathExists(Map<String, Handler> pathHandlers) {
-        return pathHandlers != null;
-    }
-
-    private boolean methodExistsForPath(Map<String, Handler> pathHandlers, String method) {
-        return pathHandlers.containsKey(method);
+    private boolean routeExists(Route route) {
+        return route != null;
     }
 }

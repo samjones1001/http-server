@@ -1,6 +1,7 @@
 package http.server;
 
+@FunctionalInterface
 public interface Handler {
-    void setResponseValues(Response response);
+    void setResponseValues(Request request, Response response);
 }
 

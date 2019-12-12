@@ -17,9 +17,26 @@ dependencies {
 }
 
 application {
-    mainClassName = 'http.server.Server'
+    mainClassName = 'http.server.App'
+}
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'http.server.App'
+        )
+    }
 }
 
 test {
     useJUnitPlatform()
 }
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        html.enabled false
+    }
+}
+
+check.dependsOn jacocoTestReport
