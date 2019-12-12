@@ -8,11 +8,6 @@ public class Server {
     private RequestRouter router;
     private ServerSocket serverSocket;
 
-    public Server(int port, RequestRouter router) throws IOException {
-        this.serverSocket = new ServerSocket(port);
-        this.router = router;
-    }
-
     public Server(ServerSocket serverSocket, RequestRouter router) {
         this.serverSocket = serverSocket;
         this.router = router;
@@ -25,7 +20,7 @@ public class Server {
         }
     }
 
-    private void handleConnection(Socket client) {
+    private void handleConnection(Socket client) throws IOException {
         router.routeRequest(client);
     }
 }

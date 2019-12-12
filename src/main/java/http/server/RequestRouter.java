@@ -22,19 +22,15 @@ public class RequestRouter {
         route.addMethodHandler(method, handler);
     }
 
-    public void routeRequest(Socket client) {
-        try {
-            BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-            OutputStream out = client.getOutputStream();
-            RequestParser rp = new RequestParser(in);
-            Request request = rp.parse();
-            Response response = new Response(out);
-            Handler handler = retrieveHandler(request);
-            handler.setResponseValues(request, response);
-            response.send();
-        } catch (IOException err) {
-            System.out.println(err.getMessage());
-        }
+    public void routeRequest(Socket client) throws IOException {
+        BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+        OutputStream out = client.getOutputStream();
+        RequestParser rp = new RequestParser(in);
+        Request request = rp.parse();
+        Response response = new Response(out);
+        Handler handler = retrieveHandler(request);
+        handler.setResponseValues(request, response);
+        response.send();
     }
 
     public Handler retrieveHandler(Request request) {

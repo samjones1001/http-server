@@ -38,7 +38,8 @@ public class Response {
 
     public void send() throws IOException  {
         headers.put("Connection", "Close");
-        String response = ResponseBuilder.buildResponse(statusCode, statusMessage, headers, body);
+        ResponseBuilder builder = new ResponseBuilder();
+        String response = builder.buildResponse(statusCode, statusMessage, headers, body);
         out.write((response).getBytes());
     }
 }

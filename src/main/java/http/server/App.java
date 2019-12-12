@@ -3,19 +3,20 @@ package http.server;
 import http.server.handlers.HeadHandler;
 
 import java.io.IOException;
+import java.net.ServerSocket;
 
 public class App {
     public static void main(String[] args) {
         try {
             RequestRouter router = routerSetup();
-            Server server = new Server(5000, router);
+            Server server = new Server(new ServerSocket(5000), router);
             server.start();
         } catch (IOException err) {
             System.out.println(err.getMessage());
         }
     }
 
-    private static RequestRouter routerSetup() {
+    public static RequestRouter routerSetup() {
         RequestRouter router = new RequestRouter();
         router.addRoute("/simple_get", "GET", ((request, response) -> {
             response.setStatus(200, "OK");

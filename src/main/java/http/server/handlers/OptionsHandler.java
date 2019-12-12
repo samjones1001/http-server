@@ -4,13 +4,7 @@ import http.server.Handler;
 
 import java.util.*;
 
-public abstract class OptionsHandler {
-    private final Map<String, Handler> methodHandlers;
-
-    public OptionsHandler(Map<String, Handler> methodHandlers) {
-        this.methodHandlers = methodHandlers;
-    }
-
+public class OptionsHandler {
     public static Handler getHandler(Set<String> availableMethods) {
         return (((request, response) -> {
             response.setStatus(200, "No Content");

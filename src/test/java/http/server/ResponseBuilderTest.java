@@ -15,8 +15,8 @@ public class ResponseBuilderTest {
             put("Connection", "Close");
             put("Content-Type", "text/html");
         }};
-
-        assertEquals(expectedOutput, ResponseBuilder.buildResponse(200, "OK", headers, null));
+        ResponseBuilder responseBuilder = new ResponseBuilder();
+        assertEquals(expectedOutput, responseBuilder.buildResponse(200, "OK", headers, null));
     }
 
     @Test
@@ -26,7 +26,8 @@ public class ResponseBuilderTest {
             put("Connection", "Close");
             put("Content-Type", "text/html");
         }};
+        ResponseBuilder responseBuilder = new ResponseBuilder();
 
-        assertEquals(expectedOutput, ResponseBuilder.buildResponse(200, "OK", headers, "This is the body"));
+        assertEquals(expectedOutput, responseBuilder.buildResponse(200, "OK", headers, "This is the body"));
     }
 }
