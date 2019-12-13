@@ -85,4 +85,20 @@ public class RequestRouterTest {
 
         assertEquals(expectedResponseText, mockSocket.getOutputStream().toString());
     }
+//
+//    @Test
+//    void returnsAServerErrorResponseIfErrorOccurs() throws IOException {
+//        String requestText = "GET /some_path HTTP/1.1\r\n\r\n";
+//        String expectedResponseText = "HTTP/1.1 505 Internal Server Error\r\nConnection: Close\r\n\r\n";
+//        MockSocket mockSocket = setupMockSocket(requestText);
+//
+//        RequestRouter router = new RequestRouter();Handler handler = ((request, response) -> {
+//            throw new IOException();
+//        });
+//
+//        router.addRoute("/some_path", "GET", handler);
+//        router.routeRequest(mockSocket);
+//
+//        assertEquals(expectedResponseText, mockSocket.getOutputStream().toString());
+//    }
 }

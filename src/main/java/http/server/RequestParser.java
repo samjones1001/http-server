@@ -10,12 +10,16 @@ public class RequestParser {
         this.in = in;
     }
 
-    public Request parse() throws IOException {
-        Request request = new Request();
-        parseRequestLine(request);
-        parseHeaders(request);
-        parseBody(request);
-        return request;
+    public Request parse() {
+        try {
+            Request request = new Request();
+            parseRequestLine(request);
+            parseHeaders(request);
+            parseBody(request);
+            return request;
+        } catch (Exception err) {
+            throw new ParseException();
+        }
     }
 
     private void parseRequestLine(Request request) throws IOException {
