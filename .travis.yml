@@ -2,7 +2,6 @@ language: java
 os: linux
 dist: trusty
 jdk: oraclejdk13
-
 script:
 - "./gradlew jar"
 - java -jar build/libs/http-server.jar &
@@ -10,15 +9,15 @@ script:
 - bundle install
 - bundle exec spinach
 - cd ..
-
 after_success:
 - "./gradlew test jacocoTestReport"
 - bash <(curl -s https://codecov.io/bash)
-
 deploy:
+  skip_cleanup: true
   provider: heroku
   api_key:
-    secure: fotdg9OzI5tq5hj2bmy6RYYDhwr4J70CJbrCQultlNnKYPDsAprigLyWS3+4LoF7W6S2N397bRBmI1bRTS9gdjC/yJpkNJKuISsm9yqr7eylHbPTgpJKHzXekQBOj8ZLVM51A01XazlmToaPBMG+Mo4G9Qaooh9F8aTiXtz1a92EZexRJkEwmlv6rOIem+ucp772bhIfazCyW4fiPXjmjXJsUhGZJA2KWV8/Acgc2C2E6Ppd5Q7njWnNFQqnp8sBrCkynknCcSAUf6ECcp45XUhaH/pjr07Bg2S9bZsPhoEXoqIo/LQKvRqZOz3DgoA9uocs9zkgrn/EK16QHXjeN3Povvo1EHeX3Q+C8dN64rubsDVdf/Xg4PX8Fqo4F2dtC9Bcb90nwKxW3OMuWrOz5+V8Mi/M5ELbDfi67kf/g/qtitGY+68rF9dc23Ao8joVC+5F2ZsjvXTEWAs8Q+bWvFxqxE9JhWNB3dGWewFHxZKnqdC2EVm/efgqOv8RgUvlQgxFr1FIuaVFFQ9ROk14cHIYNN3ilkGAGnf+Khe4da4ovCoRZ1XtS6mLBd7aO/vOeXzk7KsIhVoKlJgml+b61nUe1yoeAFXIRQVAmtGpiG4Rrp0adpdkU0U0rZ8VZTZLwLlmSwIhpt1vxiZzilBqxX8zaAENNwQKVhDuHWzBnNg=
-  app: evening-bayou-35773
+    secure: UArCkB3r6qJDZvQpoV1IpUpgrW2IMCTVpMreBdHJYQuWCTFdqoMsgd7fzQbKV5UPeTzHHJjlOplo1VWt9YoHyaYkuWwcT3A6i6rFxsedEa5rp7jCkhLyruELYmyrnFFpQXKBtnBo02fxfz7ofT2EsYYA/3PkGWccDWeg0oLUEYlzIZ+LpGHtgo6QwMKTAKlGdW1BkQs3MOz8COm+ccvbLIcaZjvEQZg3H9lmSmfrM4SAFGBYX72hH9ymI5/VghTuRzXnZJFwKD8guv5tABnmL97A02oZVmptTzRD+ayLuBk/pnetyjGIhblDn96i/JrJbTTmDAR1aXbnrJHiLwm3YnP9Amta0Y9ywhTtUY6DGBD0K17/y5tncJD0HAdzhEmEf0DY8S5n5pR7j5sg1npSykfdAkdx8HclPCoNHKTaxrKkPA3p8wfluCjFnhE2nddLXRUdFSFk+7OYPtsdoWaC5CbnBH58DAYDZvJaj/LyVcQ+fn0L0U6XIR5cKo35D0yLv02jFdGaDYmvlILclPH+8AdDgKoroqM0VF1vSWmmgTl6hhxj7nrnhn6uAG1KhAXrcCPOJ3wR58xLggsvTCmfpaOg+wOYyVH7T5+G4Yp8TSlzN42LQO+a8P781yncfqSZgCtnYO8EZdzKtYWJZoLt7Fz/8meZRzf2shry5U0HDk4=
+  app: sam-jones-http-server
   on:
+    repo: samjones1001/http-server
     branch: master
