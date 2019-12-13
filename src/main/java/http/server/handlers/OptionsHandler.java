@@ -4,8 +4,8 @@ import http.server.Handler;
 
 import java.util.*;
 
-public class OptionsHandler {
-    public static Handler getHandler(Set<String> availableMethods) {
+public interface OptionsHandler {
+    static Handler getHandler(Set<String> availableMethods) {
         return (((request, response) -> {
             response.setStatus(200, "No Content");
             response.addHeader("Content-Type", "text/html");

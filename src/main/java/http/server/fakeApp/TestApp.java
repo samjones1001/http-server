@@ -1,13 +1,15 @@
-package http.server;
+package http.server.fakeApp;
 
+import http.server.RequestRouter;
+import http.server.Server;
 import http.server.handlers.HeadHandler;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 
-public class App {
+public class TestApp {
     public static void main(String[] args) {
-        String portNumber = args.length > 0 ? args[0] : "5000";
+        String portNumber = args.length > 0 ? args[0] : "8080";
         try {
             RequestRouter router = routerSetup();
             Server server = new Server(new ServerSocket(Integer.parseInt(portNumber)), router);

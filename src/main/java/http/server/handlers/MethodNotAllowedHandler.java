@@ -4,9 +4,8 @@ import http.server.Handler;
 
 import java.util.*;
 
-public class MethodNotAllowedHandler {
-
-    public static Handler getHandler(Set<String> allowedMethods) {
+public interface MethodNotAllowedHandler {
+    static Handler getHandler(Set<String> allowedMethods) {
         return (((request, response) -> {
             response.setStatus(405, "Method Not Allowed");
             response.addHeader("Content-Type", "text/html");

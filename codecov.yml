@@ -10,3 +10,5 @@ coverage:
         target: 80
         threshold: 5
         base: parent
+ignore:
+  - "src/main/java/http/server/fakeApp"
