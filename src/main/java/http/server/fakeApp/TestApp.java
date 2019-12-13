@@ -9,7 +9,7 @@ import java.net.ServerSocket;
 
 public class TestApp {
     public static void main(String[] args) {
-        String portNumber = args.length > 0 ? args[0] : "8080";
+        String portNumber = args.length > 0 ? args[0] : "5000";
         try {
             RequestRouter router = routerSetup();
             Server server = new Server(new ServerSocket(Integer.parseInt(portNumber)), router);

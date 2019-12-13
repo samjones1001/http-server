@@ -4,7 +4,7 @@ dist: trusty
 jdk: oraclejdk13
 script:
 - "./gradlew jar"
-- java -jar build/libs/http-server.jar &
+- java -cp ./build/libs/http-server.jar http.server.fakeApp.TestApp &
 - cd feature-tests
 - bundle install
 - bundle exec spinach
