@@ -1,5 +1,6 @@
 package http.server;
 
+import http.server.handlers.BadRequestHandler;
 import http.server.handlers.NotFoundHandler;
 
 import java.io.BufferedReader;
@@ -26,9 +27,18 @@ public class RequestRouter {
         BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
         OutputStream out = client.getOutputStream();
         RequestParser rp = new RequestParser(in);
-        Request request = rp.parse();
         Response response = new Response(out);
-        Handler handler = retrieveHandler(request);
+        Handler handler;
+        Request request;
+
+        try {
+            request = rp.parse();
+            handler = retrieveHandler(request);
+        } catch (Exception err) {
+            request = new Request();
+            handler = BadRequestHandler.getHandler();
+        }
+
         handler.setResponseValues(request, response);
         response.send();
     }

@@ -62,12 +62,24 @@ public class RequestRouterTest {
     }
 
     @Test
-    void returnsAMethodNotAllowedHandlerIfPathExistsButDoesNotRespondToMethod() throws IOException {
+    void returnsAMethodNotAllowedResponseIfPathExistsButDoesNotRespondToMethod() throws IOException {
         String requestText = "POST /some_path HTTP/1.1\r\n\r\n";
         String expectedResponseText = "HTTP/1.1 405 Method Not Allowed\r\nConnection: Close\r\nContent-Length: 0\r\nContent-Type: text/html\r\nAllow: GET, HEAD, OPTIONS\r\n\r\n";
         MockSocket mockSocket = setupMockSocket(requestText);
         RequestRouter router = new RequestRouter();
         router.addRoute("/some_path", "GET", ((request, response) -> {}));
+
+        router.routeRequest(mockSocket);
+
+        assertEquals(expectedResponseText, mockSocket.getOutputStream().toString());
+    }
+
+    @Test
+    void returnsABadRequestResponseIfRequestFormatIsInvalid() throws IOException {
+        String requestText = "NotAValidRequest\r\n\r\n";
+        String expectedResponseText = "HTTP/1.1 400 Bad Request\r\nConnection: Close\r\n\r\n";
+        MockSocket mockSocket = setupMockSocket(requestText);
+        RequestRouter router = new RequestRouter();
 
         router.routeRequest(mockSocket);
 
