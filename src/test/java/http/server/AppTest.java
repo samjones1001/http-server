@@ -1,6 +1,6 @@
 package http.server;
 
-import http.server.fakeApp.TestApp;
+import http.server.controller.Controller;
 import org.junit.jupiter.api.Test;
 
 import java.util.Set;
@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class AppTest {
     @Test
     void CreatesARouterWithTheExpectedRoutes() {
-        RequestRouter router = TestApp.routerSetup();
+        RequestRouter router = Controller.routerSetup();
         Set<String> routes = router.getRoutes().keySet();
 
         assertTrue(routes.contains("/simple_get"));
