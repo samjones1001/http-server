@@ -1,9 +1,24 @@
 language: java
-
 os: linux
 dist: trusty
 jdk: oraclejdk13
 
+script:
+- "./gradlew jar"
+- java -jar build/libs/http-server.jar &
+- cd feature-tests
+- bundle install
+- bundle exec spinach
+- cd ..
+
 after_success:
-  - ./gradlew jacocoTestReport
-  - bash <(curl -s https://codecov.io/bash)
+- "./gradlew test jacocoTestReport"
+- bash <(curl -s https://codecov.io/bash)
+
+deploy:
+  provider: heroku
+  api_key:
+    secure: fotdg9OzI5tq5hj2bmy6RYYDhwr4J70CJbrCQultlNnKYPDsAprigLyWS3+4LoF7W6S2N397bRBmI1bRTS9gdjC/yJpkNJKuISsm9yqr7eylHbPTgpJKHzXekQBOj8ZLVM51A01XazlmToaPBMG+Mo4G9Qaooh9F8aTiXtz1a92EZexRJkEwmlv6rOIem+ucp772bhIfazCyW4fiPXjmjXJsUhGZJA2KWV8/Acgc2C2E6Ppd5Q7njWnNFQqnp8sBrCkynknCcSAUf6ECcp45XUhaH/pjr07Bg2S9bZsPhoEXoqIo/LQKvRqZOz3DgoA9uocs9zkgrn/EK16QHXjeN3Povvo1EHeX3Q+C8dN64rubsDVdf/Xg4PX8Fqo4F2dtC9Bcb90nwKxW3OMuWrOz5+V8Mi/M5ELbDfi67kf/g/qtitGY+68rF9dc23Ao8joVC+5F2ZsjvXTEWAs8Q+bWvFxqxE9JhWNB3dGWewFHxZKnqdC2EVm/efgqOv8RgUvlQgxFr1FIuaVFFQ9ROk14cHIYNN3ilkGAGnf+Khe4da4ovCoRZ1XtS6mLBd7aO/vOeXzk7KsIhVoKlJgml+b61nUe1yoeAFXIRQVAmtGpiG4Rrp0adpdkU0U0rZ8VZTZLwLlmSwIhpt1vxiZzilBqxX8zaAENNwQKVhDuHWzBnNg=
+  app: evening-bayou-35773
+  on:
+    branch: master

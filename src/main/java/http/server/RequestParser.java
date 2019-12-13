@@ -10,21 +10,20 @@ public class RequestParser {
         this.in = in;
     }
 
-    public Request parse() throws  IOException {
+    public Request parse() throws IOException {
         Request request = new Request();
         parseRequestLine(request);
         parseHeaders(request);
         parseBody(request);
-
         return request;
     }
 
     private void parseRequestLine(Request request) throws IOException {
-        String requestLine = in.readLine();
-        String[] requestLineComponents = requestLine.split(" ", 3);
+            String requestLine = in.readLine();
+            String[] requestLineComponents = requestLine.split(" ", 3);
 
-        request.setMethod(requestLineComponents[0]);
-        request.setPath(requestLineComponents[1]);
+            request.setMethod(requestLineComponents[0]);
+            request.setPath(requestLineComponents[1]);
     }
 
     private void parseHeaders(Request request) throws IOException {
