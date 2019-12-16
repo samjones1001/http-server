@@ -16,7 +16,7 @@ deploy:
   skip_cleanup: true
   provider: heroku
   api_key:
-    secure: HEROKU_KEY
+    secure: $HEROKU_KEY
   app: sam-jones-http-server
   on:
     repo: samjones1001/http-server

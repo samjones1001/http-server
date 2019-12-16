@@ -23,6 +23,22 @@ public class RequestParserTest {
     }
 
     @Test
+    void parsesQueryParamatersWherePresent() throws IOException {
+        String requestText = "GET /some_page.html?param1=hello&param2=goodbye HTTP/1.1\r\n\r\n";
+        Map<String, String> expectedParams = new HashMap<>() {{
+            put("param1", "hello");
+            put("param2", "goodbye");
+        }};
+        InputStream inputStream = new ByteArrayInputStream(requestText.getBytes());
+        BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
+
+        RequestParser rp = new RequestParser(in);
+        Request request = rp.parse();
+
+        assertEquals(expectedParams, request.getQueryParams());
+    }
+
+    @Test
     void parsesTheHeadersOfAnHTTPRequest() throws IOException {
         String requestText = "GET /some_page.html HTTP/1.1\r\nContent-Type: text/html\r\n\r\n";
         Map<String, String> expectedHeaders = new HashMap<>(){{

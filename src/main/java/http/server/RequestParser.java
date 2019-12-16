@@ -2,6 +2,8 @@ package http.server;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RequestParser {
     private final BufferedReader in;
@@ -27,7 +29,28 @@ public class RequestParser {
             String[] requestLineComponents = requestLine.split(" ", 3);
 
             request.setMethod(requestLineComponents[0]);
-            request.setPath(requestLineComponents[1]);
+            setPathAndQueryParams(request, requestLineComponents[1]);
+    }
+
+    private void setPathAndQueryParams(Request request, String url) {
+        String[] urlElements = url.split("\\?");
+        request.setPath(urlElements[0]);
+
+        if (urlElements.length > 1) {
+            request.setQueryParams(splitQueryParams(urlElements[1]));
+        }
+    }
+
+    private Map<String, String> splitQueryParams(String queryParams) {
+        String[] paramsList = queryParams.split("&");
+        Map<String, String> params = new HashMap<>();
+
+        for (String paramPair: paramsList) {
+            String[] values = paramPair.split("=");
+            params.put(values[0], values[1]);
+        }
+
+        return params;
     }
 
     private void parseHeaders(Request request) throws IOException {

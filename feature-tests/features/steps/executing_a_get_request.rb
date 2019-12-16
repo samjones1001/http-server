@@ -7,7 +7,7 @@ class Spinach::Features::ExecutingAGetRequest < Spinach::FeatureSteps
     expect(@response.status_code).to eq(200)
   end
 
-  step 'my response should have an empty body' do
-    expect(@response.body).to eq(File.read("../resources/html/poem.html"))
+  step 'my response should be a poem' do
+    expect(@response.body).to eq(File.read("../assets/html/poem.html"))
   end
 end

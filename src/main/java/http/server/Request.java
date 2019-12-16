@@ -7,6 +7,7 @@ public class Request {
     private String method;
     private String path;
     private Map<String, String> headers = new HashMap<>();
+    private Map<String, String> queryParams;
     private String body;
 
     public String getMethod() {
@@ -20,6 +21,12 @@ public class Request {
     }
 
     public void setPath(String path) { this.path = path; }
+
+    public void setQueryParams(Map<String, String> queryParams) {
+        this.queryParams = queryParams;
+    }
+
+    public Map<String, String> getQueryParams() { return this.queryParams; }
 
     public Map<String, String> getHeaders() {
         return this.headers;

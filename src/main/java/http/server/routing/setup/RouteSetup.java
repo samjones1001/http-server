@@ -33,9 +33,20 @@ public class RouteSetup {
         router.addRoute("/poem", "GET", ((request, response) -> {
             response.setStatus(200, "OK");
             response.addHeader("Content-Type", "text/html");
-            String body = readFile("./resources/html/poem.html");
+            String body = readFile("./assets/html/poem.html");
             response.addBody(body);
         }));
+        router.addRoute("/letter", "POST", (((request, response) -> {
+            response.setStatus(200, "OK");
+            response.addHeader("Content-Type", "text/html");
+            String body = readFile("./assets/html/letter.html");
+
+            for (String paramKey: request.getQueryParams().keySet()) {
+                String key = request.getQueryParams().get(paramKey).replace('%', ' ');
+                body = body.replaceAll("\\{" + paramKey + "}", key);
+            }
+            response.addBody(body);
+        })));
         router.addRoute("/", "GET", ((request, response) -> {}));
 
 
