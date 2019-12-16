@@ -11,4 +11,4 @@ coverage:
         threshold: 5
         base: parent
 ignore:
-  - "src/main/java/http/server/controller"
+  - "src/main/java/http/server/routing/setup"

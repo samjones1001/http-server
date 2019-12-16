@@ -3,13 +3,9 @@ package http.server.routing.setup;
 import http.server.RequestRouter;
 import http.server.handlers.HeadHandler;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 
 public class RouteSetup {
     public static RequestRouter routerSetup() {
@@ -38,7 +34,6 @@ public class RouteSetup {
             response.setStatus(200, "OK");
             response.addHeader("Content-Type", "text/html");
             String body = readFile("./resources/html/poem.html");
-//            System.out.println(body);
             response.addBody(body);
         }));
         router.addRoute("/", "GET", ((request, response) -> {}));
