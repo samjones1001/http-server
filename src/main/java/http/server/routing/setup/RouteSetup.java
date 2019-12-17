@@ -1,7 +1,7 @@
 package http.server.routing.setup;
 
-import http.server.RequestRouter;
-import http.server.handlers.HeadHandler;
+import http.server.server.RequestRouter;
+import http.server.server.handlers.HeadHandler;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -10,6 +10,7 @@ import java.nio.file.Paths;
 public class RouteSetup {
     public static RequestRouter routerSetup() {
         RequestRouter router = new RequestRouter();
+
         router.addRoute("/simple_get", "GET", ((request, response) -> {
             response.setStatus(200, "OK");
             response.addHeader("Content-Type", "text/html");
@@ -48,7 +49,6 @@ public class RouteSetup {
             response.addBody(body);
         })));
         router.addRoute("/", "GET", ((request, response) -> {}));
-
 
         return router;
     }

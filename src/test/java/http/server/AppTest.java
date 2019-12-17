@@ -1,6 +1,7 @@
 package http.server;
 
 import http.server.routing.setup.RouteSetup;
+import http.server.server.RequestRouter;
 import org.junit.jupiter.api.Test;
 
 import java.util.Set;

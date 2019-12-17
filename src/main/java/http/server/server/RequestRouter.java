@@ -1,6 +1,12 @@
-package http.server;
+package http.server.server;
 
-import http.server.handlers.NotFoundHandler;
+import http.server.server.exceptions.ParseException;
+import http.server.server.request.Request;
+import http.server.server.request.RequestParser;
+import http.server.server.response.BadRequestResponse;
+import http.server.server.response.Response;
+import http.server.server.response.ServerErrorResponse;
+import http.server.server.handlers.NotFoundHandler;
 
 import java.io.BufferedReader;
 import java.io.IOException;

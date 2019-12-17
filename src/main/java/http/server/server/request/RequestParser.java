@@ -1,4 +1,6 @@
-package http.server;
+package http.server.server.request;
+
+import http.server.server.exceptions.ParseException;
 
 import java.io.BufferedReader;
 import java.io.IOException;

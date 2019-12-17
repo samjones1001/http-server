@@ -1,10 +1,10 @@
 package http.server.handlerTests;
 
-import http.server.Handler;
-import http.server.Request;
-import http.server.RequestParser;
-import http.server.Response;
-import http.server.handlers.NotFoundHandler;
+import http.server.server.Handler;
+import http.server.server.request.Request;
+import http.server.server.request.RequestParser;
+import http.server.server.response.Response;
+import http.server.server.handlers.NotFoundHandler;
 import org.junit.jupiter.api.Test;
 
 import java.io.*;

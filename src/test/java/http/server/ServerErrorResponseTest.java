@@ -1,5 +1,7 @@
 package http.server;
 
+import http.server.server.response.Response;
+import http.server.server.response.ServerErrorResponse;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;

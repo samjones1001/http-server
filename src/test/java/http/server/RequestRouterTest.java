@@ -1,6 +1,8 @@
 package http.server;
 
 import http.server.mocks.MockSocket;
+import http.server.server.Handler;
+import http.server.server.RequestRouter;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
@@ -38,7 +40,8 @@ public class RequestRouterTest {
         String requestText = "GET /some_path HTTP/1.1\r\n\r\n";
         String expectedResponseText = "HTTP/1.1 200 OK\r\nConnection: Close\r\nContent-Type: text/html\r\n\r\n";
         MockSocket mockSocket = setupMockSocket(requestText);
-        RequestRouter router = new RequestRouter();Handler handler = ((request, response) -> {
+        RequestRouter router = new RequestRouter();
+        Handler handler = ((request, response) -> {
             response.setStatus(200, "OK");
             response.addHeader("Content-Type", "text/html");
         });
@@ -85,20 +88,4 @@ public class RequestRouterTest {
 
         assertEquals(expectedResponseText, mockSocket.getOutputStream().toString());
     }
-//
-//    @Test
-//    void returnsAServerErrorResponseIfErrorOccurs() throws IOException {
-//        String requestText = "GET /some_path HTTP/1.1\r\n\r\n";
-//        String expectedResponseText = "HTTP/1.1 505 Internal Server Error\r\nConnection: Close\r\n\r\n";
-//        MockSocket mockSocket = setupMockSocket(requestText);
-//
-//        RequestRouter router = new RequestRouter();Handler handler = ((request, response) -> {
-//            throw new IOException();
-//        });
-//
-//        router.addRoute("/some_path", "GET", handler);
-//        router.routeRequest(mockSocket);
-//
-//        assertEquals(expectedResponseText, mockSocket.getOutputStream().toString());
-//    }
 }

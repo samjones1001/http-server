@@ -1,8 +1,11 @@
 package http.server;
 
-import http.server.handlers.HeadHandler;
+import http.server.server.handlers.HeadHandler;
 import http.server.mocks.MockServerSocket;
 import http.server.mocks.MockSocket;
+import http.server.server.Handler;
+import http.server.server.RequestRouter;
+import http.server.server.Server;
 import org.junit.jupiter.api.Test;
 
 import java.io.*;

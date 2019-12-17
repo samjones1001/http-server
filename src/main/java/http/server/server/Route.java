@@ -1,8 +1,8 @@
-package http.server;
+package http.server.server;
 
-import http.server.handlers.HeadHandler;
-import http.server.handlers.MethodNotAllowedHandler;
-import http.server.handlers.OptionsHandler;
+import http.server.server.handlers.HeadHandler;
+import http.server.server.handlers.MethodNotAllowedHandler;
+import http.server.server.handlers.OptionsHandler;
 
 import java.util.HashMap;
 import java.util.Map;

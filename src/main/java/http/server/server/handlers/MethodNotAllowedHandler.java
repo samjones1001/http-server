@@ -1,6 +1,6 @@
-package http.server.handlers;
+package http.server.server.handlers;
 
-import http.server.Handler;
+import http.server.server.Handler;
 
 import java.util.*;
 
