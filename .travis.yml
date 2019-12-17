@@ -16,7 +16,7 @@ deploy:
   skip_cleanup: true
   provider: heroku
   api_key:
-    secure: $HEROKU_KEY
+    secure: UvZs1P9TC7S+jFrujxkxnNOEfCWn5YYXCjVODcJQ2+NxMe41IHSxRFRBdIxVdispWnuJlvy6GLm/fjz6nlsOq0M9aHkxG+CHKNXBRwm7+d6w3Aabp1WxK0986Bp7s2tTcm+JqxL4gWfJxYftP/09S++Zs+HXMQEUp+wc5ICRrCC5SzO3aojpHAXZl0JEPgJfv/iYr2/WW+SeFajlTKWbEowYd4F6O2uVTgZ3PPn1SXdHNGgHsBXrCi5JnOVgtCdWf3MTbu334aDGBBorjFkPjacyJQWxfsKi4kqGteqVIvlZL0v+G6oPvn2nlLEAd6EyeLl0Rhxc9LKexhip3gX4MNvlxic+S23Wh4+HDtL1K/yfWXTUVi0gTI5FE7V2TCzeYtnCvfOlm2XPauv4O/1AiXFwzWGF+X8BFjHqv1YGzm1jpvRn9Ru/WIb0qKy1WE2IKMoa8GjeboXoyKKO/J79qezlIXlLyVDZFGsgRUUd+SoOJ+r8MrzcCDNbWLv+FfxMzlF/1vIIm5ZxQS1Uq8xo2+FvmhKpvXjIzBSNmw7Bmnog/Ibt23mxw4UAMxPZN3NgM8ElPkBKTbHVcBNW/pYYIWA9esAl89BikS7GfnP4bfbToGbDmiClVDZ3EyQUVuU4jlb44oFoyz9WGjMHC5birBaz2TuGCmmbG4kKiKJu02c=
   app: sam-jones-http-server
   on:
     repo: samjones1001/http-server
