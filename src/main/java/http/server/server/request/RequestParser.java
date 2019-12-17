@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RequestParser {
+    private static final String contentLengthKey = "Content-Length";
+
     private final BufferedReader in;
 
     public RequestParser(BufferedReader in) {
@@ -64,8 +66,8 @@ public class RequestParser {
     }
 
     private void parseBody(Request request) throws IOException {
-        if (request.getHeaders().containsKey("Content-Length")) {
-            int contentLength = Integer.parseInt(request.getHeaders().get("Content-Length"));
+        if (request.getHeaders().containsKey(contentLengthKey)) {
+            int contentLength = Integer.parseInt(request.getHeaders().get(contentLengthKey));
             char[] buffer = new char[contentLength];
 
             in.read(buffer, 0, contentLength);
