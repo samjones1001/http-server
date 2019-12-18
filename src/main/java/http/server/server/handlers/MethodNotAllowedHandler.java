@@ -10,7 +10,7 @@ public interface MethodNotAllowedHandler {
             response.setStatus(405, "Method Not Allowed");
             response.addHeader("Content-Type", "text/html");
             response.addHeader("Allow", allowedMethodsHeaderValue(allowedMethods));
-            response.addBody("");
+            response.addBody("".getBytes());
         }));
     }
 
