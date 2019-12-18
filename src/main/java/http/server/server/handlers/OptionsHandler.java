@@ -10,7 +10,7 @@ public interface OptionsHandler {
             response.setStatus(200, "No Content");
             response.addHeader("Content-Type", "text/html");
             response.addHeader("Allow", allowedMethodsHeaderValue(availableMethods));
-            response.addBody("");
+            response.addBody("".getBytes());
         }));
     }
 

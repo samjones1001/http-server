@@ -1,29 +1,42 @@
 package http.server.server.response;
 
+import http.server.server.exceptions.BuildResponseException;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Map;
 
 public class ResponseBuilder {
-    public String buildResponse(int statusCode, String statusMessage, Map<String, String> headers, String body) {
-        String responseString =  buildHeaders(buildResponseLine(statusCode, statusMessage), headers) ;
-        if (body != null) {
-            responseString += body;
+    public byte[] buildResponse(int statusCode, String statusMessage, Map<String, String> headers, byte[] body) {
+        ByteArrayOutputStream responseBuilder = new ByteArrayOutputStream();
+        try {
+            responseBuilder.write(buildHeaders(buildResponseLine(statusCode, statusMessage), headers));
+            if (body != null) {
+                responseBuilder.write(body);
+            }
+        } catch (IOException err){
+            throw new BuildResponseException();
         }
-
-        return  responseString;
+        return responseBuilder.toByteArray();
     }
 
-    private String buildResponseLine(int statusCode, String statusMessage) {
-        return "HTTP/1.1 " + statusCode + " " + statusMessage + "\r\n";
+    private byte[] buildResponseLine(int statusCode, String statusMessage) {
+        return ("HTTP/1.1 " + statusCode + " " + statusMessage + "\r\n").getBytes();
     }
 
-    private String buildHeaders(String response, Map<String, String> headers) {
+    private byte[] buildHeaders(byte[] response, Map<String, String> headers) throws IOException {
+        ByteArrayOutputStream responseBuilder = new ByteArrayOutputStream();
+        responseBuilder.write(response);
+
         for (String headerName : headers.keySet()) {
-            response += buildHeaderLine(headerName, headers);
+            responseBuilder.write(buildHeaderLine(headerName, headers));
         }
-        return response + "\r\n";
+
+        responseBuilder.write("\r\n".getBytes());
+        return responseBuilder.toByteArray();
     }
 
-    private String buildHeaderLine(String headerName, Map<String, String> headers) {
-        return headerName + ": " + headers.get(headerName) + "\r\n";
+    private byte[] buildHeaderLine(String headerName, Map<String, String> headers) {
+        return (headerName + ": " + headers.get(headerName) + "\r\n").getBytes();
     }
 }

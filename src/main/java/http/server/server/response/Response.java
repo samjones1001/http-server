@@ -10,7 +10,7 @@ public class Response {
     private int statusCode;
     private String statusMessage;
     private Map<String, String> headers = new HashMap<>();
-    private String body;
+    private byte[] body;
 
     public Response(OutputStream out) {
        this.out = out;
@@ -29,17 +29,17 @@ public class Response {
         this.headers.put(name, value);
     }
 
-    public String getBody() { return this.body; }
+    public byte[] getBody() { return this.body; }
 
-    public void addBody(String body) {
-        addHeader("Content-Length", Integer.toString(body.length()));
+    public void addBody(byte[] body) {
+        addHeader("Content-Length", Integer.toString(body.length));
         this.body = body;
     }
 
     public void send() throws IOException  {
         headers.put("Connection", "Close");
         ResponseBuilder builder = new ResponseBuilder();
-        String response = builder.buildResponse(statusCode, statusMessage, headers, body);
-        out.write((response).getBytes());
+        byte[] response = builder.buildResponse(statusCode, statusMessage, headers, body);
+        out.write((response));
     }
 }
