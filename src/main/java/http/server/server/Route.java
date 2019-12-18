@@ -22,9 +22,10 @@ public class Route {
                 methodHandlers.get(methodVerb) : MethodNotAllowedHandler.getHandler(methodHandlers.keySet());
     }
 
-    public void addMethodHandler(String methodVerb, Handler handler) {
+    public Route addMethodHandler(String methodVerb, Handler handler) {
         methodHandlers.putIfAbsent(methodVerb, handler);
         addDefaultMethods();
+        return this;
     }
 
     private void addDefaultMethods() {
