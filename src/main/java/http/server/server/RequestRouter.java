@@ -23,9 +23,10 @@ public class RequestRouter {
         return routes;
     }
 
-    public void addRoute(String path, String method, Handler handler) {
+    public Route addRoute(String path, String method, Handler handler) {
         Route route = routes.computeIfAbsent(path, (k) -> new Route());
         route.addMethodHandler(method, handler);
+        return route;
     }
 
     public void routeRequest(Socket client) throws IOException {
